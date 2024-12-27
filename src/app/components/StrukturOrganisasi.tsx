@@ -24,7 +24,7 @@ export default function StrukturOrganisasi() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
+        staggerChildren: 0.2,
       },
     },
   }
@@ -38,7 +38,7 @@ export default function StrukturOrganisasi() {
     <section id="organisasi" className="py-20 bg-gradient-to-r from-blue-50 to-white">
       <div className="container mx-auto px-4" ref={ref}>
         <motion.h2
-          className="text-3xl font-bold text-center text-blue-600 mb-12"
+          className="text-4xl font-bold text-center text-blue-600 mb-12"
           variants={itemVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
@@ -54,128 +54,42 @@ export default function StrukturOrganisasi() {
           <div className="w-px h-16 bg-blue-600"></div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {anggota.map((anggota, index) => (
-              <motion.div key={index} className="flex flex-col items-center" variants={itemVariants}>
+              <motion.div
+                key={index}
+                className="flex flex-col items-center"
+                variants={itemVariants}
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
                 <div className="w-px h-16 bg-blue-600"></div>
-                <motion.div
-                  className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <Image
-                    src={anggota.gambar}
-                    alt={anggota.nama}
-                    width={100}
-                    height={100}
-                    className="rounded-full mb-4"
-                  />
-                  <h3 className="text-xl font-semibold text-blue-600">{anggota.nama}</h3>
-                  <p className="text-gray-600">{anggota.jabatan}</p>
-                </motion.div>
+                <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center transform transition-all duration-300 hover:shadow-xl">
+                  <div className="relative w-32 h-32 mb-4 overflow-hidden rounded-full">
+                    <Image
+                      src={anggota.gambar}
+                      alt={anggota.nama}
+                      layout="fill"
+                      objectFit="cover"
+                      className="transition-transform duration-300 hover:scale-110"
+                    />
+                  </div>
+                  <h3 className="text-xl font-semibold text-blue-600 mb-2">{anggota.nama}</h3>
+                  <p className="text-gray-600 text-center">{anggota.jabatan}</p>
+                  <motion.div
+                    className="mt-4 opacity-0 transition-opacity duration-300"
+                    whileHover={{ opacity: 1 }}
+                  >
+                    <a
+                      href="#"
+                      className="text-blue-500 hover:text-blue-700 transition-colors duration-300"
+                    >
+                      Lihat Profil
+                    </a>
+                  </motion.div>
+                </div>
               </motion.div>
             ))}
           </div>
         </motion.div>
-      </div>
-    </section>
-  )}
-
-Selanjutnya, mari kita perbarui komponen Divisi:
-
-```tsx file="app/components/Divisi.tsx"
-'use client'
-
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Autoplay, Navigation } from 'swiper/modules'
-import { motion } from 'framer-motion'
-import { useInView } from 'react-intersection-observer'
-import 'swiper/css'
-import 'swiper/css/navigation'
-
-const divisi = [
-  {
-    nama: 'Pengembangan IT',
-    tugas: [
-      'Mengembangkan dan memelihara website HMTI',
-      'Membuat aplikasi mobile untuk acara',
-      'Memberikan dukungan teknis untuk divisi lain',
-    ],
-  },
-  {
-    nama: 'Acara & Program',
-    tugas: [
-      'Menyelenggarakan workshop dan seminar teknologi',
-      'Merencanakan dan melaksanakan konferensi IT tahunan',
-      'Mengkoordinasikan acara sosial untuk anggota',
-    ],
-  },
-  {
-    nama: 'Hubungan Masyarakat',
-    tugas: [
-      'Mengelola akun media sosial',
-      'Menjalin hubungan dengan organisasi eksternal',
-      'Membuat materi promosi untuk acara',
-    ],
-  },
-  {
-    nama: 'Akademik',
-    tugas: [
-      'Mengorganisir kelompok belajar dan sesi bimbingan',
-      'Berkoordinasi dengan fakultas untuk dukungan akademik',
-      'Memelihara perpustakaan sumber daya untuk anggota',
-    ],
-  },
-]
-
-export default function Divisi() {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  })
-
-  return (
-    <section id="divisi" className="py-20 bg-white">
-      <div className="container mx-auto px-4" ref={ref}>
-        <motion.h2
-          className="text-3xl font-bold text-center text-blue-600 mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-        >
-          Divisi Kami
-        </motion.h2>
-        <Swiper
-          modules={[Autoplay, Navigation]}
-          spaceBetween={30}
-          slidesPerView={1}
-          navigation
-          autoplay={{ delay: 5000, disableOnInteraction: false }}
-          breakpoints={{
-            640: {
-              slidesPerView: 2,
-            },
-            1024: {
-              slidesPerView: 3,
-            },
-          }}
-        >
-          {divisi.map((divisi, index) => (
-            <SwiperSlide key={index}>
-              <motion.div
-                className="bg-gradient-to-br from-blue-50 to-white rounded-lg shadow-md p-6 h-full"
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <h3 className="text-xl font-semibold text-blue-600 mb-4">{divisi.nama}</h3>
-                <ul className="list-disc list-inside space-y-2">
-                  {divisi.tugas.map((tugas, taskIndex) => (
-                    <li key={taskIndex} className="text-gray-700">{tugas}</li>
-                  ))}
-                </ul>
-              </motion.div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
       </div>
     </section>
   )

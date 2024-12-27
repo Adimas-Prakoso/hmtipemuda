@@ -4,48 +4,61 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 
-const divisi = [
-  {
-    nama: 'Pengembangan IT',
-    deskripsi: 'Mengembangkan solusi teknologi inovatif untuk mendukung kegiatan organisasi.',
-    tugas: [
-      'Mengembangkan dan memelihara website HMTI',
-      'Membuat aplikasi mobile untuk acara',
-      'Memberikan dukungan teknis untuk divisi lain',
-    ],
-    ikon: '💻',
-  },
-  {
-    nama: 'Acara & Program',
-    deskripsi: 'Merancang dan mengeksekusi berbagai acara dan program untuk anggota HMTI.',
-    tugas: [
-      'Menyelenggarakan workshop dan seminar teknologi',
-      'Merencanakan dan melaksanakan konferensi IT tahunan',
-      'Mengkoordinasikan acara sosial untuk anggota',
-    ],
-    ikon: '🎉',
-  },
-  {
-    nama: 'Hubungan Masyarakat',
-    deskripsi: 'Membangun dan memelihara hubungan dengan pihak eksternal dan internal.',
-    tugas: [
-      'Mengelola akun media sosial',
-      'Menjalin hubungan dengan organisasi eksternal',
-      'Membuat materi promosi untuk acara',
-    ],
-    ikon: '🤝',
-  },
-  {
-    nama: 'Akademik',
-    deskripsi: 'Mendukung pengembangan akademik anggota HMTI.',
-    tugas: [
-      'Mengorganisir kelompok belajar dan sesi bimbingan',
-      'Berkoordinasi dengan fakultas untuk dukungan akademik',
-      'Memelihara perpustakaan sumber daya untuk anggota',
-    ],
-    ikon: '📚',
-  },
-]
+type DivisiId = 'it' | 'acara' | 'humas' | 'akademik'
+
+interface DivisiCardProps {
+  id: DivisiId
+  nama: string
+  deskripsi: string
+  tugas: string[]
+  ikon: string
+  activeId: DivisiId | null
+  onToggle: (id: DivisiId) => void
+}
+
+const DivisiCard = ({ id, nama, deskripsi, tugas, ikon, activeId, onToggle }: DivisiCardProps) => {
+  const isExpanded = activeId === id
+
+  return (
+    <motion.div
+      className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105"
+      variants={{
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 },
+      }}
+    >
+      <div className="p-6 cursor-pointer" onClick={() => onToggle(id)}>
+        <div className="text-4xl mb-4">{ikon}</div>
+        <h3 className="text-xl font-semibold text-blue-600 mb-2">{nama}</h3>
+        <p className="text-gray-600 mb-4">{deskripsi}</p>
+        <motion.div
+          className="text-blue-500 font-medium"
+          initial={false}
+          animate={{ rotate: isExpanded ? 180 : 0 }}
+        >
+          {isExpanded ? '▲' : '▼'}
+        </motion.div>
+      </div>
+      <AnimatePresence initial={false}>
+        {isExpanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto', transition: { duration: 0.3 } }}
+            exit={{ opacity: 0, height: 0, transition: { duration: 0.2 } }}
+            className="px-6 pb-6 overflow-hidden"
+          >
+            <h4 className="font-semibold mb-2">Tugas Utama:</h4>
+            <ul className="list-disc list-inside space-y-1">
+              {tugas.map((tugas, index) => (
+                <li key={index} className="text-gray-700">{tugas}</li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  )
+}
 
 export default function Divisi() {
   const [ref, inView] = useInView({
@@ -53,7 +66,11 @@ export default function Divisi() {
     threshold: 0.1,
   })
 
-  const [expandedDivisi, setExpandedDivisi] = useState<number | null>(null)
+  const [activeId, setActiveId] = useState<DivisiId | null>(null)
+
+  const handleToggle = (id: DivisiId) => {
+    setActiveId(activeId === id ? null : id)
+  }
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -63,11 +80,6 @@ export default function Divisi() {
         staggerChildren: 0.1,
       },
     },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
   }
 
   return (
@@ -87,50 +99,60 @@ export default function Divisi() {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          {divisi.map((div, index) => (
-            <motion.div
-              key={index}
-              className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105"
-              variants={itemVariants}
-            >
-              <div
-                className="p-6 cursor-pointer"
-                onClick={() => setExpandedDivisi(expandedDivisi === index ? null : index)}
-              >
-                <div className="text-4xl mb-4">{div.ikon}</div>
-                <h3 className="text-xl font-semibold text-blue-600 mb-2">{div.nama}</h3>
-                <p className="text-gray-600 mb-4">{div.deskripsi}</p>
-                <motion.div
-                  className="text-blue-500 font-medium"
-                  initial={false}
-                  animate={{ rotate: expandedDivisi === index ? 180 : 0 }}
-                >
-                  {expandedDivisi === index ? '▲' : '▼'}
-                </motion.div>
-              </div>
-              <AnimatePresence>
-                {expandedDivisi === index && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="px-6 pb-6"
-                  >
-                    <h4 className="font-semibold mb-2">Tugas Utama:</h4>
-                    <ul className="list-disc list-inside space-y-1">
-                      {div.tugas.map((tugas, taskIndex) => (
-                        <li key={taskIndex} className="text-gray-700">{tugas}</li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          ))}
+          <DivisiCard
+            id="it"
+            nama="Pengembangan IT"
+            deskripsi="Mengembangkan solusi teknologi inovatif untuk mendukung kegiatan organisasi."
+            tugas={[
+              'Mengembangkan dan memelihara website HMTI',
+              'Membuat aplikasi mobile untuk acara',
+              'Memberikan dukungan teknis untuk divisi lain',
+            ]}
+            ikon="💻"
+            activeId={activeId}
+            onToggle={handleToggle}
+          />
+          <DivisiCard
+            id="acara"
+            nama="Acara & Program"
+            deskripsi="Merancang dan mengeksekusi berbagai acara dan program untuk anggota HMTI."
+            tugas={[
+              'Menyelenggarakan workshop dan seminar teknologi',
+              'Merencanakan dan melaksanakan konferensi IT tahunan',
+              'Mengkoordinasikan acara sosial untuk anggota',
+            ]}
+            ikon="🎉"
+            activeId={activeId}
+            onToggle={handleToggle}
+          />
+          <DivisiCard
+            id="humas"
+            nama="Hubungan Masyarakat"
+            deskripsi="Membangun dan memelihara hubungan dengan pihak eksternal dan internal."
+            tugas={[
+              'Mengelola akun media sosial',
+              'Menjalin hubungan dengan organisasi eksternal',
+              'Membuat materi promosi untuk acara',
+            ]}
+            ikon="🤝"
+            activeId={activeId}
+            onToggle={handleToggle}
+          />
+          <DivisiCard
+            id="akademik"
+            nama="Akademik"
+            deskripsi="Mendukung pengembangan akademik anggota HMTI."
+            tugas={[
+              'Mengorganisir kelompok belajar dan sesi bimbingan',
+              'Berkoordinasi dengan fakultas untuk dukungan akademik',
+              'Memelihara perpustakaan sumber daya untuk anggota',
+            ]}
+            ikon="📚"
+            activeId={activeId}
+            onToggle={handleToggle}
+          />
         </motion.div>
       </div>
     </section>
   )
 }
-
