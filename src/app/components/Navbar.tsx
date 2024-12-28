@@ -41,12 +41,12 @@ export default function Navbar() {
             <span className="ml-2 text-xl font-bold text-blue-600">HMTI Hastabrata</span>
           </motion.div>
           <div className="hidden md:flex items-center space-x-4">
-            {['Tentang', 'Visi & Misi', 'Organisasi', 'Divisi', 'Kegiatan'].map((item, index) => (
+            {['Tentang', 'Visi & Misi', 'Organisasi', 'Divisi', 'Kegiatan'].map((item) => (
               <motion.div
                 key={item}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * (index + 1) }}
+                transition={{ delay: 0.1 }}
               >
                 <Link href={`#${item.toLowerCase().replace(' & ', '-')}`} className="text-blue-600 hover:text-blue-800">
                   {item}
@@ -81,7 +81,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {['Tentang', 'Visi & Misi', 'Organisasi', 'Divisi', 'Kegiatan'].map((item, index) => (
+            {['Tentang', 'Visi & Misi', 'Organisasi', 'Divisi', 'Kegiatan'].map((item) => (
               <Link
                 key={item}
                 href={`#${item.toLowerCase().replace(' & ', '-')}`}
