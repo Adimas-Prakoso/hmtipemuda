@@ -34,15 +34,15 @@ export default function Hero() {
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className="absolute inset-0 flex items-center justify-center text-center">
+      <div className="absolute inset-0 flex items-center justify-center text-center px-4">
         <motion.div
           className="text-white"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-5xl font-bold mb-4">Selamat Datang di HMTI Hastabrata</h1>
-          <p className="text-xl mb-8">Memberdayakan Pemuda melalui Teknologi dan Inovasi</p>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Selamat Datang di HMTI Hastabrata</h1>
+          <p className="text-lg md:text-xl mb-8">Memberdayakan Pemuda melalui Teknologi dan Inovasi</p>
           <motion.button
             className="bg-blue-600 text-white px-6 py-3 rounded-md text-lg hover:bg-blue-700 transition duration-300"
             whileHover={{ scale: 1.05 }}

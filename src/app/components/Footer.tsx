@@ -20,21 +20,6 @@ export default function Footer() {
             <p>Telepon: +62 123 456 7890</p>
           </motion.div>
           <motion.div
-            className="w-full md:w-1/3 mb-6 md:mb-0"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <h3 className="text-xl font-semibold mb-4">Tautan Cepat</h3>
-            <ul className="space-y-2">
-              <li><Link href="#tentang" className="hover:underline">Tentang</Link></li>
-              <li><Link href="#visi-misi" className="hover:underline">Visi & Misi</Link></li>
-              <li><Link href="#organisasi" className="hover:underline">Organisasi</Link></li>
-              <li><Link href="#divisi" className="hover:underline">Divisi</Link></li>
-              <li><Link href="#kegiatan" className="hover:underline">Kegiatan</Link></li>
-            </ul>
-          </motion.div>
-          <motion.div
             className="w-full md:w-1/3"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
