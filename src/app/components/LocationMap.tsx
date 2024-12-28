@@ -1,113 +1,74 @@
-'use client'
-
-import { useEffect, useRef, useState } from 'react'
-import { Loader } from '@googlemaps/js-api-loader'
-import { Loader2 } from 'lucide-react'
-
-
 interface LocationMapProps {
-  latitude: number
-  longitude: number
+  className?: string;
 }
 
-export default function LocationMap({ latitude, longitude }: LocationMapProps) {
-  const mapRef = useRef<HTMLDivElement>(null)
-  const [mapError, setMapError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [mapLoaded, setMapLoaded] = useState(false)
-
-  useEffect(() => {
-    if (!mapRef.current || mapLoaded) return
-
-    const initMap = async () => {
-      try {
-        console.log('Starting map initialization...');
-        setIsLoading(true)
-        const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-        if (!apiKey) {
-          throw new Error('Google Maps API key is missing');
-        }
-        console.log('API Key found, loading Google Maps...');
-        
-        const loader = new Loader({
-          apiKey: apiKey,
-          version: 'weekly',
-          libraries: ['places', 'marker'],
-        })
-
-        await loader.load()
-        console.log('Google Maps loaded successfully');
-
-        // Ensure the div is still available after loading
-        if (!mapRef.current) {
-          throw new Error('Map container not found')
-        }
-
-        const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary
-        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary
-
-        const mapOptions: google.maps.MapOptions = {
-          center: { lat: latitude, lng: longitude },
-          zoom: 15,
-          mapTypeControl: false,
-          streetViewControl: false,
-          fullscreenControl: false,
-          styles: [
-            {
-              featureType: "poi",
-              elementType: "labels",
-              stylers: [{ visibility: "off" }],
-            },
-          ],
-        }
-
-        const map = new Map(mapRef.current, mapOptions)
-
-        new AdvancedMarkerElement({
-          position: { lat: latitude, lng: longitude },
-          map: map,
-          title: 'Kampus Pemuda'
-        })
-
-        setMapLoaded(true)
-        setIsLoading(false)
-      } catch (error) {
-        console.error('Error loading Google Maps:', error)
-        setMapError('Terjadi kesalahan saat memuat peta. Pastikan API key sudah dikonfigurasi dengan benar.')
-        setIsLoading(false)
-      }
-    }
-
-    initMap()
-  }, [latitude, longitude, mapLoaded])
-
-  if (isLoading) {
-    return (
-      <div className="w-full h-96 flex items-center justify-center bg-gray-100 rounded-lg">
-        <div className="flex items-center gap-2">
-          <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-          <span className="text-gray-600">Memuat peta...</span>
-        </div>
-      </div>
-    )
-  }
-
-  if (mapError) {
-    return (
-      <div className="w-full h-96 flex items-center justify-center bg-gray-100 rounded-lg">
-        <div className="text-center px-4">
-          <p className="text-red-600 mb-2">{mapError}</p>
-          <p className="text-sm text-gray-600">
-            Alamat: Jl. Pemuda No.10, RT.2/RW.7, Rawamangun, Kec. Pulo Gadung, Kota Jakarta Timur
-          </p>
-        </div>
-      </div>
-    )
-  }
-
+const LocationMap: React.FC<LocationMapProps> = ({ className }) => {
   return (
-    <div className="relative w-full h-96 rounded-lg shadow-md overflow-hidden">
-      <div ref={mapRef} className="absolute inset-0" />
-    </div>
-  )
-}
+    <section id="lokasi" className="py-10 md:py-20 bg-white">
+      <div className="container mx-auto px-4">
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-blue-600 mb-8 md:mb-12">Lokasi Kampus</h2>
+        <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          {/* Maps */}
+          <div className="relative w-full h-0 pb-[75%] md:pb-[100%]">
+            <iframe
+              className="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg"
+              style={{ border: 0 }}
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+              src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=Universitas BSI Kampus Pemuda`}>
+            </iframe>
+          </div>
+
+          {/* Informasi */}
+          <div className="space-y-6">
+            {/* Informasi Alamat dan Kontak */}
+            <div className="p-6 bg-gray-50 rounded-lg">
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">Informasi Lokasi</h3>
+              <p className="text-gray-600 mb-2">
+                Universitas BSI Kampus Pemuda<br />
+                Jl. Pemuda No.22, RT.2/RW.7, Rawamangun<br />
+                Kec. Pulo Gadung, Jakarta Timur<br />
+                DKI Jakarta 13220
+              </p>
+              <p className="text-gray-600 mb-4">
+                Telepon: (021) 4892366
+              </p>
+              
+              {/* Tombol Petunjuk Arah */}
+              <a
+                href="https://www.google.com/maps/dir//Universitas+BSI+Kampus+Pemuda"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Petunjuk Arah
+              </a>
+            </div>
+
+            {/* Informasi Transportasi */}
+            <div className="p-6 bg-gray-50 rounded-lg">
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">Transportasi Umum</h3>
+              <div className="space-y-3">
+                <div>
+                  <h4 className="font-medium text-gray-800">TransJakarta:</h4>
+                  <p className="text-gray-600">Halte Pemuda Rawamangun (Koridor 2 dan 2B)</p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-800">KRL Commuter Line:</h4>
+                  <p className="text-gray-600">Stasiun Jatinegara (± 3 km)</p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-800">Angkutan Umum:</h4>
+                  <p className="text-gray-600">Mikrolet M01, M02, M09</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default LocationMap;
