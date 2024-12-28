@@ -1,8 +1,4 @@
-interface LocationMapProps {
-  className?: string;
-}
-
-const LocationMap: React.FC<LocationMapProps> = ({ className }) => {
+const LocationMap = () => {
   return (
     <section id="lokasi" className="py-10 md:py-20 bg-white">
       <div className="container mx-auto px-4">
