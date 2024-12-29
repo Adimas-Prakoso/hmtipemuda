@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import RippleEffect from "./components/RippleEffect";
-import MouseTrail from "./components/MouseTrail";
-import ScrollProgress from "./components/ScrollProgress";
-import ScrollToTop from "./components/ScrollToTop";
+import ClientComponents from "./components/ClientComponents";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,10 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans`}
       >
-        <RippleEffect />
-        <MouseTrail />
-        <ScrollProgress />
-        <ScrollToTop />
+        <ClientComponents />
         {children}
       </body>
     </html>
