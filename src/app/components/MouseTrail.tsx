@@ -1,11 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from '../hooks/useMediaQuery';
+import { useIsClient } from '../hooks/useIsClient';
 
 interface Point {
   x: number;
   y: number;
-  id: number;
+  id: string;
 }
 
 interface MouseTrailProps {
@@ -19,69 +20,56 @@ export default function MouseTrail({
   trailLength = 25,
   fadeTime = 30
 }: MouseTrailProps) {
+  const isClient = useIsClient();
   const [points, setPoints] = useState<Point[]>([]);
-  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   useEffect(() => {
-    if (!isDesktop) {
-      setPoints([]);
-      return;
-    }
+    if (!isClient || isMobile) return;
 
-    let timeoutId: NodeJS.Timeout;
-    let lastX = 0;
-    let lastY = 0;
-
+    let pointCount = 0;
     const handleMouseMove = (e: MouseEvent) => {
-      const currentX = e.clientX;
-      const currentY = e.clientY;
-      
-      // Calculate distance between last point and current point
-      const distance = Math.sqrt(
-        Math.pow(currentX - lastX, 2) + Math.pow(currentY - lastY, 2)
-      );
-      
-      // Only add point if mouse has moved enough
-      if (distance > 5) {
-        const newPoint = {
-          x: currentX,
-          y: currentY,
-          id: Date.now(),
-        };
+      const newPoint = {
+        x: e.clientX,
+        y: e.clientY,
+        id: `${Date.now()}-${pointCount++}`
+      };
 
-        setPoints((prevPoints) => {
-          const updatedPoints = [...prevPoints, newPoint];
-          return updatedPoints.slice(-trailLength);
-        });
-
-        lastX = currentX;
-        lastY = currentY;
-      }
-    };
-
-    const cleanPoints = () => {
-      setPoints((prevPoints) => {
-        if (prevPoints.length > 0) {
-          return prevPoints.slice(1);
+      setPoints(prevPoints => {
+        const updatedPoints = [...prevPoints, newPoint];
+        if (updatedPoints.length > trailLength) {
+          return updatedPoints.slice(updatedPoints.length - trailLength);
         }
-        return prevPoints;
+        return updatedPoints;
       });
-      timeoutId = setTimeout(cleanPoints, fadeTime);
     };
 
-    document.addEventListener('mousemove', handleMouseMove);
-    timeoutId = setTimeout(cleanPoints, fadeTime);
+    window.addEventListener('mousemove', handleMouseMove);
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      clearTimeout(timeoutId);
+      window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [trailLength, fadeTime, isDesktop]);
+  }, [trailLength, isClient, isMobile]);
 
-  if (!isDesktop) return null;
+  useEffect(() => {
+    if (!isClient || isMobile) return;
+
+    const interval = setInterval(() => {
+      setPoints(prevPoints => {
+        if (prevPoints.length <= 1) return prevPoints;
+        return prevPoints.slice(1);
+      });
+    }, fadeTime);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [fadeTime, isClient, isMobile]);
+
+  if (!isClient || isMobile) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-40">
+    <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 9999 }}>
       {points.map((point, index) => {
         if (index === 0) return null;
         const prevPoint = points[index - 1];
@@ -91,23 +79,22 @@ export default function MouseTrail({
         const dy = point.y - prevPoint.y;
         const length = Math.sqrt(dx * dx + dy * dy);
         const angle = Math.atan2(dy, dx);
+        const opacity = (index / points.length) * 0.5 + 0.5;
         
         return (
           <div
-            key={point.id}
+            key={`${point.id}-${index}`}
             style={{
               position: 'fixed',
               left: prevPoint.x,
               top: prevPoint.y,
               width: `${length}px`,
-              height: '6px',
-              background: color,
+              height: '4px',
+              backgroundColor: color,
               transform: `rotate(${angle}rad)`,
               transformOrigin: '0 50%',
-              pointerEvents: 'none',
-              opacity: (index / points.length) * 0.5 + 0.5,
-              transition: 'opacity 0.1s ease-out',
-              borderRadius: '5px',
+              opacity,
+              transition: 'opacity 0.1s ease-out'
             }}
           />
         );

@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useIsClient } from '../hooks/useIsClient';
 
 interface RippleProps {
   color?: string;
@@ -13,17 +14,20 @@ interface RippleEffect {
 }
 
 export default function RippleEffect({ color = 'rgba(0, 122, 255, 0.7)', duration = 850 }: RippleProps) {
+  const isClient = useIsClient();
   const [ripples, setRipples] = useState<RippleEffect[]>([]);
 
   useEffect(() => {
+    if (!isClient) return;
+
     const handleClick = (e: MouseEvent) => {
       const newRipple = {
         x: e.clientX,
         y: e.clientY,
-        id: Date.now(),
+        id: Date.now()
       };
 
-      setRipples((prevRipples) => [...prevRipples, newRipple]);
+      setRipples(prevRipples => [...prevRipples, newRipple]);
     };
 
     document.addEventListener('click', handleClick);
@@ -31,37 +35,53 @@ export default function RippleEffect({ color = 'rgba(0, 122, 255, 0.7)', duratio
     return () => {
       document.removeEventListener('click', handleClick);
     };
-  }, []);
+  }, [isClient]);
 
   useEffect(() => {
+    if (!isClient) return;
+    
     if (ripples.length > 0) {
-      const timeoutId = setTimeout(() => {
-        setRipples((prevRipples) => prevRipples.slice(1));
+      const timer = setTimeout(() => {
+        setRipples(prevRipples => prevRipples.slice(1));
       }, duration);
 
-      return () => clearTimeout(timeoutId);
+      return () => clearTimeout(timer);
     }
-  }, [ripples.length, duration]);
+  }, [ripples, duration, isClient]);
+
+  if (!isClient) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-50">
-      {ripples.map((ripple) => (
-        <span
+    <>
+      {ripples.map(ripple => (
+        <div
           key={ripple.id}
           style={{
             position: 'fixed',
-            left: ripple.x - 10,
-            top: ripple.y - 10,
-            width: '5px',
-            height: '5px',
+            left: ripple.x - 5,
+            top: ripple.y - 5,
+            width: '10px',
+            height: '10px',
             borderRadius: '50%',
-            background: color,
+            backgroundColor: color,
             pointerEvents: 'none',
-            transform: 'scale(0)',
-            animation: `rippleEffect ${duration}ms ease-out`,
+            animation: `ripple ${duration}ms linear`,
+            zIndex: 9999
           }}
         />
       ))}
-    </div>
+      <style jsx>{`
+        @keyframes ripple {
+          0% {
+            transform: scale(0);
+            opacity: 0.7;
+          }
+          100% {
+            transform: scale(40);
+            opacity: 0;
+          }
+        }
+      `}</style>
+    </>
   );
 }
