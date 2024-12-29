@@ -6,44 +6,79 @@ import { useInView } from 'react-intersection-observer'
 
 const divisi = [
   {
-    nama: 'Pengembangan IT',
-    deskripsi: 'Mengembangkan solusi teknologi inovatif untuk mendukung kegiatan organisasi.',
+    nama: 'Ketua',
+    deskripsi: 'Memimpin dan mengarahkan seluruh kegiatan organisasi untuk mencapai tujuan bersama.',
     tugas: [
-      'Mengembangkan dan memelihara website HMTI',
-      'Membuat aplikasi mobile untuk acara',
-      'Memberikan dukungan teknis untuk divisi lain',
+      'Memimpin dan mengarahkan seluruh kegiatan himpunan.',
+      'Membentuk struktur organisasi yang efektif.',
+      'Membagi tugas dan tanggung jawab kepada seluruh pengurus.',
+      'Menyelenggarakan rapat-rapat secara berkala.',
+      'Membuat keputusan-keputusan strategis untuk kemajuan himpunan.',
+      'Mengkoordinasikan seluruh kegiatan dan program kerja himpunan.',
+      'Melakukan evaluasi terhadap seluruh kegiatan yang telah dilaksanakan.',
+      'Membuat laporan pertanggungjawaban kepada anggota himpunan.',
     ],
-    ikon: '💻',
+    ikon: '👑',
   },
   {
-    nama: 'Acara & Program',
-    deskripsi: 'Merancang dan mengeksekusi berbagai acara dan program untuk anggota HMTI.',
+    nama: 'Sekjen',
+    deskripsi: 'Memberikan dukungan administratif dan menjadi tangan kanan ketua dalam menjalankan organisasi.',
     tugas: [
-      'Menyelenggarakan workshop dan seminar teknologi',
-      'Merencanakan dan melaksanakan konferensi IT tahunan',
-      'Mengkoordinasikan acara sosial untuk anggota',
+      'Memberikan dukungan administratif dan operasional kepada Ketua.',
+      'Menggantikan peran Ketua dalam rapat atau acara tertentu jika Ketua berhalangan hadir.',
+      'Menyusun dan mendokumentasikan surat-menyurat organisasi.',
+      'Mengelola dan menyimpan arsip-arsip penting, seperti notulen rapat, proposal, dan laporan kegiatan.',
+      'Mengelola penyebaran informasi dan komunikasi internal melalui grup chat, email, atau media komunikasi lainnya.',
     ],
-    ikon: '🎉',
+    ikon: '📝',
   },
   {
-    nama: 'Hubungan Masyarakat',
-    deskripsi: 'Membangun dan memelihara hubungan dengan pihak eksternal dan internal.',
+    nama: 'Bendahara',
+    deskripsi: 'Mengelola dan mengatur keuangan organisasi secara profesional dan transparan.',
     tugas: [
-      'Mengelola akun media sosial',
-      'Menjalin hubungan dengan organisasi eksternal',
-      'Membuat materi promosi untuk acara',
+      'Mengelola dan mengatur seluruh pemasukan dan pengeluaran keuangan himpunan.',
+      'Mencatat semua transaksi keuangan, baik pemasukan maupun pengeluaran, secara rinci dan teratur.',
+      'Menyusun laporan pertanggungjawaban keuangan setelah setiap kegiatan selesai.',
+      'Berkoordinasi dengan Ketua dan Sekretaris terkait alokasi dana dan perencanaan keuangan.',
+      'Menyimpan semua bukti transaksi dan dokumen keuangan dengan rapi dan mudah diakses untuk keperluan audit atau evaluasi.',
     ],
-    ikon: '🤝',
+    ikon: '💰',
   },
   {
-    nama: 'Akademik',
-    deskripsi: 'Mendukung pengembangan akademik anggota HMTI.',
+    nama: 'PSDM',
+    deskripsi: 'Mengembangkan potensi anggota dan menciptakan lingkungan organisasi yang kondusif.',
     tugas: [
-      'Mengorganisir kelompok belajar dan sesi bimbingan',
-      'Berkoordinasi dengan fakultas untuk dukungan akademik',
-      'Memelihara perpustakaan sumber daya untuk anggota',
+      'Mengelola proses rekrutmen dan seleksi anggota baru, termasuk penyusunan kriteria dan mekanisme penerimaan.',
+      'Merencanakan dan melaksanakan program sosialisasi untuk memperkenalkan anggota baru pada visi, misi, budaya, dan kegiatan himpunan.',
+      'Menciptakan lingkungan yang kondusif dan suportif agar anggota merasa nyaman dan termotivasi untuk berkontribusi.',
+      'Memberikan bimbingan dan konseling bagi anggota yang membutuhkan, terkait dengan pengembangan diri maupun permasalahan organisasi.',
     ],
-    ikon: '📚',
+    ikon: '🎯',
+  },
+  {
+    nama: 'Litbang',
+    deskripsi: 'Melakukan penelitian dan pengembangan untuk kemajuan organisasi.',
+    tugas: [
+      'Melakukan penelitian tentang topik tertentu yang relevan dengan bidang studi atau isu-isu terkini.',
+      'Melakukan evaluasi terhadap program kerja dan kinerja organisasi.',
+      'Melakukan riset untuk mengidentifikasi kebutuhan atau masalah yang ada di internal organisasi.',
+      'Menyusun rekomendasi untuk perbaikan.',
+      'Mempublikasikan hasil penelitian yang telah dilakukan, baik dalam bentuk jurnal, laporan, atau media lain.',
+    ],
+    ikon: '🔬',
+  },
+  {
+    nama: 'Kominfo',
+    deskripsi: 'Mengelola komunikasi dan informasi organisasi baik internal maupun eksternal.',
+    tugas: [
+      'Mengelola akun media sosial himpunan secara aktif.',
+      'Membuat konten menarik (teks, gambar, video) yang relevan dengan kegiatan himpunan.',
+      'Menyusun dan menyebarkan informasi terkait kegiatan himpunan (laporan kegiatan).',
+      'Membuat dokumentasi kegiatan (foto, video) untuk keperluan arsip dan publikasi.',
+      'Mendesain materi publikasi (flyer, banner, poster).',
+      'Mengkoordinasikan kegiatan promosi himpunan.',
+    ],
+    ikon: '📱',
   },
 ]
 
@@ -86,7 +121,7 @@ export default function Divisi() {
           Divisi Kami
         </motion.h2>
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           variants={containerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
@@ -94,7 +129,7 @@ export default function Divisi() {
           {divisi.map((div, index) => (
             <motion.div
               key={index}
-              className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl"
+              className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl h-fit"
               variants={itemVariants}
             >
               <div
@@ -154,4 +189,3 @@ export default function Divisi() {
     </section>
   )
 }
-

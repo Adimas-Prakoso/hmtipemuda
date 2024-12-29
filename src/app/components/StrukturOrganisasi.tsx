@@ -5,12 +5,7 @@ import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 
 const anggota = [
-  { nama: 'Sandra Bagus ', jabatan: 'Ketua', gambar: '/anggota1.jpg' },
-  { nama: 'Siti Rahayu', jabatan: 'Wakil Ketua', gambar: '/anggota2.jpg' },
-  { nama: 'Agus Setiawan', jabatan: 'Sekretaris', gambar: '/anggota3.jpg' },
-  { nama: 'Dewi Lestari', jabatan: 'Bendahara', gambar: '/anggota4.jpg' },
-  { nama: 'Rudi Hermawan', jabatan: 'Kepala Divisi IT', gambar: '/anggota5.jpg' },
-  { nama: 'Rina Wati', jabatan: 'Kepala Divisi Acara', gambar: '/anggota6.jpg' },
+  { nama: 'Sandra Bagus ', jabatan: 'Ketua', gambar: '/anggota1.jpg' }
 ]
 
 export default function StrukturOrganisasi() {

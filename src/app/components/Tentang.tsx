@@ -31,7 +31,7 @@ export default function Tentang() {
           >
             <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
               <Image
-                src="/tentang-hmti.jpg"
+                src="/images/tentang-hmti.jpg"
                 alt="HMTI Activities"
                 fill
                 className="object-cover transform hover:scale-105 transition-transform duration-500"

@@ -81,7 +81,7 @@ export default function MouseTrail({
   if (!isDesktop) return null;
 
   return (
-    <>
+    <div className="fixed inset-0 pointer-events-none z-40">
       {points.map((point, index) => {
         if (index === 0) return null;
         const prevPoint = points[index - 1];
@@ -112,6 +112,6 @@ export default function MouseTrail({
           />
         );
       })}
-    </>
+    </div>
   );
 }

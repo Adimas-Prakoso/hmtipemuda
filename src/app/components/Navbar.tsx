@@ -38,12 +38,12 @@ export default function Navbar() {
             transition={{ delay: 0.2 }}
           >
             <Image src="/logo.png" alt="Logo HMTI" width={50} height={50} />
-            <span className="ml-2 text-xl font-bold text-blue-600">HMTI Hastabrata</span>
+            <span className="ml-2 text-xl font-bold text-blue-600">HMTI Pemuda</span>
           </motion.div>
           <div className="hidden md:flex items-center space-x-4">
-            {['Tentang', 'Visi & Misi', 'Organisasi', 'Divisi', 'Kegiatan'].map((item) => (
+            {['Tentang', 'Visi & Misi', 'Organisasi', 'Divisi', 'Kegiatan'].map((item, index) => (
               <motion.div
-                key={item}
+                key={`nav-desktop-${item}`}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
@@ -81,9 +81,9 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {['Tentang', 'Visi & Misi', 'Organisasi', 'Divisi', 'Kegiatan'].map((item) => (
+            {['Tentang', 'Visi & Misi', 'Organisasi', 'Divisi', 'Kegiatan'].map((item, index) => (
               <Link
-                key={item}
+                key={`nav-mobile-${item}`}
                 href={`#${item.toLowerCase().replace(' & ', '-')}`}
                 className="block py-2 text-blue-600 hover:text-blue-800"
                 onClick={toggleMenu}

@@ -55,19 +55,6 @@ export default function Footer() {
           transition={{ duration: 0.5, delay: 0.6 }}
         >
           <p>&copy; {new Date().getFullYear()} HMTI Hastabrata. Hak Cipta Dilindungi.</p>
-          <div className="mt-4 flex flex-col items-center">
-            <p className="text-sm">Web ini dibuat oleh</p>
-            <p className="text-lg font-semibold mt-1">Adimas Prakoso</p>
-            <div className="mt-2 relative w-48 h-40">
-              <Image
-                src="/images/signature.png"
-                alt="Signature"
-                fill
-                style={{ objectFit: 'contain' }}
-                className="opacity-90"
-              />
-            </div>
-          </div>
         </motion.div>
       </div>
     </footer>

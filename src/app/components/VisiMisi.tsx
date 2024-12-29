@@ -44,17 +44,17 @@ export default function VisiMisi() {
           <motion.div className="w-full md:w-1/2" variants={itemVariants}>
             <h3 className="text-xl md:text-2xl font-semibold text-blue-600 mb-4">Visi Kami</h3>
             <p className="text-base md:text-lg text-black">
-              Menjadi organisasi mahasiswa terkemuka yang memberdayakan dan membina calon profesional TI masa depan, mendorong inovasi, kepemimpinan, dan tanggung jawab sosial.
+            Menjadikan HMTI sebagai wadah aspirasi dan pelayanan demi mewujudkan mahasiswa teknologi informasi yang aktif, kreatif, kompetitif, bertanggungjawab, dan berwawasan luas agar mampu bersaing dalam perkembangan teknologi.
             </p>
           </motion.div>
           <motion.div className="w-full md:w-1/2" variants={itemVariants}>
             <h3 className="text-xl md:text-2xl font-semibold text-blue-600 mb-4">Misi Kami</h3>
             <ul className="list-disc list-inside text-base md:text-lg space-y-2 text-black">
-              <li>Menyediakan kesempatan untuk pertumbuhan pribadi dan profesional</li>
-              <li>Mendorong kolaborasi dan berbagi pengetahuan antar anggota</li>
-              <li>Menyelenggarakan acara dan lokakarya untuk meningkatkan keterampilan teknis</li>
-              <li>Membangun hubungan yang kuat dengan mitra industri dan alumni</li>
-              <li>Berkontribusi pada masyarakat melalui inisiatif berbasis teknologi</li>
+              <li>Meningkatkan kontribusi HMTI kepada lingkungan kampus serta masyarakat luas terutama dibidang Teknologi Informasi.</li>
+              <li>Menciptakan prestasi atau akademisi yang kreatif dan inovatif dari berbagai aspek, baik akademik ataupun non akademik.</li>
+              <li>Menanamkan sikap disiplin dan bertanggung jawab dalam berorganisasi kepada setiap anggota.</li>
+              <li>Menciptakan ikatan yang kuat dan rasa memiliki terhadap himpunan serta menjadikan HMTI sebagai keluarga.</li>
+              <li>Menjalin hubungan baik dan kerja sama dengan organisasi mahasiswa lainnya serta menjaga nama baik himpunan dan almamater.</li>
             </ul>
           </motion.div>
         </motion.div>

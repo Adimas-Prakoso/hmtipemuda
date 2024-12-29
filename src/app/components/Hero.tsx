@@ -8,33 +8,32 @@ import 'swiper/css/effect-fade'
 
 export default function Hero() {
   const backgrounds = [
-    '/hero-bg-1.jpg',
-    '/hero-bg-2.jpg',
-    '/hero-bg-3.jpg',
+    '/images/hero1.jpg',
+    '/images/hero2.jpg',
+    '/images/hero3.jpg',
   ]
 
   return (
-    <section className="relative h-screen">
+    <section className="relative h-screen overflow-hidden">
       <Swiper
         modules={[Autoplay, EffectFade]}
         effect="fade"
         autoplay={{ delay: 5000, disableOnInteraction: false }}
         loop={true}
-        className="absolute inset-0"
+        className="absolute inset-0 h-full w-full"
       >
         {backgrounds.map((bg, index) => (
-          <SwiperSlide key={index}>
+          <SwiperSlide key={index} className="h-full w-full">
             <div
-              className="w-full h-full bg-cover bg-center"
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-[0.4]"
               style={{
                 backgroundImage: `url(${bg})`,
-                filter: 'brightness(0.6)',
               }}
             />
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className="absolute inset-0 flex items-center justify-center text-center px-4">
+      <div className="absolute inset-0 flex items-center justify-center text-center px-4 z-20">
         <motion.div
           className="text-white"
           initial={{ opacity: 0, y: 20 }}
@@ -55,4 +54,3 @@ export default function Hero() {
     </section>
   )
 }
-

@@ -44,7 +44,7 @@ export default function RippleEffect({ color = 'rgba(0, 122, 255, 0.7)', duratio
   }, [ripples.length, duration]);
 
   return (
-    <>
+    <div className="fixed inset-0 pointer-events-none z-50">
       {ripples.map((ripple) => (
         <span
           key={ripple.id}
@@ -62,6 +62,6 @@ export default function RippleEffect({ color = 'rgba(0, 122, 255, 0.7)', duratio
           }}
         />
       ))}
-    </>
+    </div>
   );
 }
