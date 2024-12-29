@@ -49,14 +49,14 @@ export default function MouseTrail({
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [trailLength, isClient, isMobile]);
+  }, [isClient, isMobile, trailLength]);
 
   useEffect(() => {
     if (!isClient || isMobile) return;
 
     const interval = setInterval(() => {
       setPoints(prevPoints => {
-        if (prevPoints.length <= 1) return prevPoints;
+        if (prevPoints.length === 0) return prevPoints;
         return prevPoints.slice(1);
       });
     }, fadeTime);
