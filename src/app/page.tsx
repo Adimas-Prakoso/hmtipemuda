@@ -5,7 +5,6 @@ import VisiMisi from './components/VisiMisi'
 import StrukturOrganisasi from './components/StrukturOrganisasi'
 import Divisi from './components/Divisi'
 import Kegiatan from './components/Kegiatan'
-import News from './components/Berita'
 import LocationMap from './components/LocationMap';
 import Footer from './components/Footer'
 
@@ -19,7 +18,6 @@ export default function Home() {
       <StrukturOrganisasi />
       <Divisi />
       <Kegiatan />
-      <News />
       <LocationMap />
       <Footer />
     </main>

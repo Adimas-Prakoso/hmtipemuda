@@ -58,14 +58,15 @@ export default function RippleEffect({ color = 'rgba(0, 122, 255, 0.7)', duratio
           key={ripple.id}
           style={{
             position: 'fixed',
-            left: ripple.x - 5,
-            top: ripple.y - 5,
-            width: '5px',
-            height: '5px',
+            left: ripple.x,
+            top: ripple.y,
+            width: '0px',
+            height: '0px',
+            transform: 'translate(-50%, -50%)',
             borderRadius: '50%',
             backgroundColor: color,
             pointerEvents: 'none',
-            animation: `ripple ${duration}ms linear`,
+            animation: `ripple ${duration}ms ease-out`,
             zIndex: 9999
           }}
         />
@@ -73,11 +74,13 @@ export default function RippleEffect({ color = 'rgba(0, 122, 255, 0.7)', duratio
       <style jsx>{`
         @keyframes ripple {
           0% {
-            transform: scale(0);
-            opacity: 0.7;
+            width: 0px;
+            height: 0px;
+            opacity: 0.5;
           }
           100% {
-            transform: scale(40);
+            width: 200px;
+            height: 200px;
             opacity: 0;
           }
         }

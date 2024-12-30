@@ -3,10 +3,12 @@
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, EffectFade } from 'swiper/modules'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 import 'swiper/css'
 import 'swiper/css/effect-fade'
 
 export default function Hero() {
+  const router = useRouter()
   const backgrounds = [
     '/images/hero1.jpg',
     '/images/hero2.jpg',
@@ -46,6 +48,7 @@ export default function Hero() {
             className="bg-blue-600 text-white px-6 py-3 rounded-md text-lg hover:bg-blue-700 transition duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={() => router.push('/explore')}
           >
             Pelajari Lebih Lanjut
           </motion.button>
