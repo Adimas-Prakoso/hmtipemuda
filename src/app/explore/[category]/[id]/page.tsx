@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useParams, useRouter } from 'next/navigation'
+import Image from 'next/image'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 
@@ -147,10 +148,13 @@ export default function ItemDetailPage() {
 
             {/* Hero Image */}
             <div className="relative h-96 rounded-xl overflow-hidden mb-8">
-              <img
+              <Image
                 src={item.image}
                 alt={item.title}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 100vw"
+                priority
               />
               <div className="absolute top-4 right-4">
                 <span className={`px-4 py-2 rounded-full text-sm font-medium text-white
