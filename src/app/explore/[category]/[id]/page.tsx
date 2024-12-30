@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
+import ReactMarkdown from 'react-markdown'
 
 interface ItemDetail {
   title: string
@@ -30,25 +31,24 @@ const getItemDetails = (category: string, id: string): ItemDetail | null => {
       image: '/images/workshop1.jpg',
       category: 'workshop',
       content: `
-        <h2>Tentang Workshop</h2>
-        <p>Workshop ini dirancang untuk membantu Anda memahami fundamental React dan Next.js, framework populer untuk membangun aplikasi web modern.</p>
-        
-        <h3>Yang Akan Dipelajari:</h3>
-        <ul>
-          <li>Fundamental React & Hooks</li>
-          <li>Server Side Rendering dengan Next.js</li>
-          <li>Routing dan API Routes</li>
-          <li>State Management</li>
-          <li>Best Practices dan Tips</li>
-        </ul>
+# Tentang Workshop
 
-        <h3>Persyaratan:</h3>
-        <ul>
-          <li>Laptop dengan spesifikasi minimum</li>
-          <li>Pengetahuan dasar JavaScript</li>
-          <li>Text editor (VS Code direkomendasikan)</li>
-        </ul>
-      `
+Workshop ini dirancang untuk membantu Anda memahami fundamental React dan Next.js, framework populer untuk membangun aplikasi web modern.
+
+## Yang Akan Dipelajari
+
+* Fundamental React & Hooks
+* Server Side Rendering dengan Next.js
+* Routing dan API Routes
+* State Management
+* Best Practices dan Tips
+
+## Persyaratan
+
+* Laptop dengan spesifikasi minimum
+* Pengetahuan dasar JavaScript
+* Text editor (VS Code direkomendasikan)
+`
     },
     'berita-2': {
       title: 'HMTI Gelar Kompetisi Coding',
@@ -57,20 +57,21 @@ const getItemDetails = (category: string, id: string): ItemDetail | null => {
       image: '/images/berita1.jpg',
       category: 'berita',
       content: `
-        <h2>Kompetisi Coding HMTI 2024</h2>
-        <p>HMTI kembali menggelar kompetisi coding tahunan yang ditujukan untuk mahasiswa teknik informatika se-Indonesia. Event ini merupakan ajang bergengsi yang telah sukses diselenggarakan selama 5 tahun berturut-turut.</p>
+# Kompetisi Coding HMTI 2024
 
-        <h3>Kategori Lomba:</h3>
-        <ul>
-          <li>Web Development</li>
-          <li>Mobile App Development</li>
-          <li>Data Science</li>
-          <li>Game Development</li>
-        </ul>
+HMTI kembali menggelar kompetisi coding tahunan yang ditujukan untuk mahasiswa teknik informatika se-Indonesia. Event ini merupakan ajang bergengsi yang telah sukses diselenggarakan selama 5 tahun berturut-turut.
 
-        <h3>Total Hadiah:</h3>
-        <p>Puluhan juta rupiah dan kesempatan magang di perusahaan teknologi terkemuka.</p>
-      `
+## Kategori Lomba
+
+* Web Development
+* Mobile App Development
+* Data Science
+* Game Development
+
+## Total Hadiah
+
+Puluhan juta rupiah dan kesempatan magang di perusahaan teknologi terkemuka.
+`
     },
     'acara-3': {
       title: 'Tech Talk: AI & Machine Learning',
@@ -79,24 +80,23 @@ const getItemDetails = (category: string, id: string): ItemDetail | null => {
       image: '/images/acara1.jpg',
       category: 'acara',
       content: `
-        <h2>Tech Talk: AI & Machine Learning</h2>
-        <p>Bergabunglah dalam diskusi mendalam tentang perkembangan terkini di bidang Artificial Intelligence dan Machine Learning bersama para ahli dan praktisi industri.</p>
+# Tech Talk: AI & Machine Learning
 
-        <h3>Topik Pembahasan:</h3>
-        <ul>
-          <li>Tren AI terkini</li>
-          <li>Implementasi Machine Learning di industri</li>
-          <li>Karir di bidang AI & ML</li>
-          <li>Studi kasus dan demo</li>
-        </ul>
+Bergabunglah dalam diskusi mendalam tentang perkembangan terkini di bidang Artificial Intelligence dan Machine Learning bersama para ahli dan praktisi industri.
 
-        <h3>Pembicara:</h3>
-        <ul>
-          <li>Dr. Budi Santoso - AI Researcher</li>
-          <li>Rina Wijaya - ML Engineer at Tech Corp</li>
-          <li>Ahmad Fadli - Data Scientist</li>
-        </ul>
-      `
+## Topik Pembahasan
+
+* Tren AI terkini
+* Implementasi Machine Learning di industri
+* Karir di bidang AI & ML
+* Studi kasus dan demo
+
+## Pembicara
+
+* Dr. Budi Santoso - AI Researcher
+* Rina Wijaya - ML Engineer at Tech Corp
+* Ahmad Fadli - Data Scientist
+`
     }
   }
 
@@ -128,7 +128,7 @@ export default function ItemDetailPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gray-50 pt-16">
+      <div className="min-h-screen bg-gray-50 pt-16 pb-16">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -138,7 +138,7 @@ export default function ItemDetailPage() {
             {/* Back Button */}
             <button
               onClick={() => router.back()}
-              className="mb-8 flex items-center text-blue-600 hover:underline"
+              className="mb-8 flex items-center text-blue-600 hover:underline pt-10"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -167,7 +167,7 @@ export default function ItemDetailPage() {
 
             {/* Content */}
             <div className="bg-white rounded-xl shadow-lg p-8">
-              <h1 className="text-3xl font-bold mb-4">{item.title}</h1>
+              <h1 className="text-3xl font-bold text-blue-600 mb-4">{item.title}</h1>
               <div className="flex items-center text-gray-500 mb-8">
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
@@ -175,10 +175,9 @@ export default function ItemDetailPage() {
                 </svg>
                 {item.date}
               </div>
-              <div 
-                className="prose max-w-none"
-                dangerouslySetInnerHTML={{ __html: item.content }}
-              />
+              <div className="prose prose-blue max-w-none text-black">
+                <ReactMarkdown>{item.content}</ReactMarkdown>
+              </div>
             </div>
           </motion.div>
         </div>
