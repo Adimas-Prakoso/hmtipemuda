@@ -121,7 +121,7 @@ export default function StrukturOrganisasi() {
   const [selectedImage, setSelectedImage] = useState<{ image: string; nama: string } | null>(null);
 
   return (
-    <section id="struktur-organisasi" className="py-20 bg-gradient-to-br from-blue-50 via-white to-blue-50">
+    <section id="struktur" className="py-20 bg-gradient-to-br from-blue-50 via-white to-blue-50">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}

@@ -41,7 +41,7 @@ export default function Navbar() {
             <span className="ml-2 text-xl font-bold text-blue-600">HMTI Pemuda</span>
           </motion.div>
           <div className="hidden md:flex items-center space-x-4">
-            {['Tentang', 'Visi & Misi', 'Organisasi', 'Divisi', 'Kegiatan'].map((item) => (
+            {['Tentang', 'Visi & Misi', 'Struktur', 'Divisi', 'Kegiatan'].map((item) => (
               <motion.div
                 key={`nav-desktop-${item}`}
                 initial={{ opacity: 0, y: -20 }}
