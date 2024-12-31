@@ -2,21 +2,17 @@ import { NextResponse } from 'next/server';
 import mysql, { RowDataPacket } from 'mysql2/promise';
 import { createTransport } from 'nodemailer';
 import bcrypt from 'bcryptjs';
+import { dbConfig } from '@/lib/dbConfig';
 
 const transporter = createTransport({
-  service: 'gmail',
+  host: "mail.hmtipemuda.my.id",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
+    pass: process.env.EMAIL_PASS
+  }
 });
-
-const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'hmtipemuda',
-};
 
 interface LoginRequestBody {
   email: string;
@@ -32,11 +28,12 @@ interface UserRow extends RowDataPacket {
 }
 
 export async function POST(request: Request) {
+  let connection;
   try {
     const { email, password } = await request.json() as LoginRequestBody;
 
     // Connect to database
-    const connection = await mysql.createConnection(dbConfig);
+    connection = await mysql.createConnection(dbConfig);
 
     // Check if user exists
     const [rows] = await connection.execute<UserRow[]>(
@@ -86,6 +83,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Verification code sent' });
   } catch (error: unknown) {
     console.error('Login error:', error);
+    if (connection) await connection.end();
     return NextResponse.json(
       { message: 'Terjadi kesalahan saat login' },
       { status: 500 }

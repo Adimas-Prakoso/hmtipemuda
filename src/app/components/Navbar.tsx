@@ -67,6 +67,7 @@ export default function Navbar() {
               className="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-md hover:bg-blue-50 transition duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => router.push('/register')}
             >
               Daftar
             </motion.button>
@@ -100,7 +101,8 @@ export default function Navbar() {
             >
               Masuk
             </button>
-            <button className="w-full bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-md hover:bg-blue-50 transition duration-300 mt-2">
+            <button className="w-full bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-md hover:bg-blue-50 transition duration-300 mt-2"
+              onClick={() => router.push('/register')}>
               Daftar
             </button>
           </motion.div>

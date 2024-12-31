@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import mysql, { RowDataPacket } from 'mysql2/promise';
+import { dbConfig } from '@/lib/dbConfig';
 
 interface VerifyRequestBody {
   email: string;
@@ -13,19 +14,13 @@ interface UserRow extends RowDataPacket {
   is_verified: boolean;
 }
 
-const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'hmtipemuda',
-};
-
 export async function POST(request: Request) {
+  let connection;
   try {
     const { email, verificationCode } = await request.json() as VerifyRequestBody;
 
     // Connect to database
-    const connection = await mysql.createConnection(dbConfig);
+    connection = await mysql.createConnection(dbConfig);
 
     // Check verification code
     const [rows] = await connection.execute<UserRow[]>(
@@ -61,6 +56,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ user: userData });
   } catch (error: unknown) {
     console.error('Verification error:', error);
+    if (connection) {
+      await connection.end();
+    }
     return NextResponse.json(
       { message: 'Terjadi kesalahan saat verifikasi' },
       { status: 500 }
