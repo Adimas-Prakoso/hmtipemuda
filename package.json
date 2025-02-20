@@ -9,9 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@react-three/drei": "^9.121.5",
-    "@react-three/fiber": "^8.17.14",
-    "@types/three": "^0.173.0",
     "@types/ua-parser-js": "^0.7.39",
     "elysia": "^1.2.14",
     "framer-motion": "^12.4.4",
@@ -19,7 +16,6 @@
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "three": "^0.173.0",
     "ua-parser-js": "^2.0.2"
   },
   "devDependencies": {

@@ -136,7 +136,6 @@ export const AboutSection = () => {
           >
             <iframe
               title="Rog"
-              frameBorder="0"
               allowFullScreen
               allow="autoplay; fullscreen; xr-spatial-tracking"
               className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] xl:h-[700px] rounded-lg"

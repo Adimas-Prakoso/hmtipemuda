@@ -3,8 +3,26 @@ import fs from 'fs'
 import path from 'path'
 import type { Visitor } from '@/lib/monitor_visitor'
 
+const API_KEY = process.env.APIKEY
+
 const app = new Elysia({ prefix: '/api' })
-    .get('/visitors', () => {
+    .get('/visitors', ({ headers, query }) => {
+        // Validasi API key dari header atau query parameter
+        const headerApiKey = headers['x-api-key']
+        const queryApiKey = query.apikey
+        
+        // Cek API key dari header atau query parameter
+        const providedApiKey = headerApiKey || queryApiKey
+        
+        if (!providedApiKey || providedApiKey !== API_KEY) {
+            return new Response(
+                JSON.stringify({ 
+                    success: false, 
+                    error: 'Unauthorized: Invalid or missing API key' 
+                }), 
+                { status: 401 }
+            )
+        }
         try {
             const filePath = path.join(process.cwd(), 'data', 'visitor.json')
             
