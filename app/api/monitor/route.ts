@@ -5,6 +5,12 @@ const app = new Elysia({ prefix: '/api' })
     .post('/monitor', async ({ request }) => {
         try {
             const visitorData = await monitorVisitor(request)
+            
+            // Jika IP adalah ::1, kembalikan response khusus
+            if (!visitorData) {
+                return { success: true, message: 'Skipped localhost IPv6 visitor' }
+            }
+            
             return { success: true, data: visitorData }
         } catch (error) {
             console.error('Error monitoring visitor:', error)

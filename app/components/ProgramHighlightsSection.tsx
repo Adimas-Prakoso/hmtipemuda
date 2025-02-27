@@ -1,138 +1,159 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useInView } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 
 const ProgramHighlightsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const [failedImages] = useState<{[key: string]: boolean}>({});
   
   const programs = [
     {
-      title: "Workshop & Pelatihan",
-      description: "Program pengembangan keterampilan teknis dan soft skill untuk mahasiswa TI melalui hands-on training.",
-      icon: "/icons/workshop.svg", 
+      title: "Sosialisasi",
+      description: "Kegiatan pengenalan HMTI kepada mahasiswa baru dan penyebaran informasi program kerja kepada seluruh anggota.",
+      icon: "/icons/sosialisasi.svg", 
       image: "/images/program1.jpg",
-      color: "from-blue-600 to-cyan-500"
+      color: "from-blue-600 to-cyan-500",
+      bgColor: "bg-blue-50"
     },
     {
-      title: "Kompetisi IT",
-      description: "Ajang untuk menguji dan mengembangkan kemampuan mahasiswa dalam berbagai bidang teknologi informasi.",
-      icon: "/icons/competition.svg",
+      title: "MUBES",
+      description: "Musyawarah Besar sebagai forum tertinggi dalam pengambilan keputusan strategis dan pemilihan pengurus HMTI.",
+      icon: "/icons/mubes.svg",
       image: "/images/program2.jpg",
-      color: "from-indigo-600 to-blue-500"
+      color: "from-indigo-600 to-blue-500",
+      bgColor: "bg-indigo-50"
     },
     {
-      title: "Seminar & Webinar",
-      description: "Menambah wawasan dari para ahli dan praktisi industri teknologi informasi terkini.",
-      icon: "/icons/seminar.svg",
+      title: "LDK",
+      description: "Latihan Dasar Kepemimpinan untuk mengembangkan jiwa kepemimpinan, manajemen organisasi, dan soft skill anggota.",
+      icon: "/icons/ldk.svg",
       image: "/images/program3.jpg",
-      color: "from-cyan-500 to-teal-500"
+      color: "from-cyan-500 to-teal-500",
+      bgColor: "bg-cyan-50"
     },
     {
-      title: "Pengabdian Masyarakat",
-      description: "Menerapkan ilmu teknologi informasi untuk membantu masyarakat dan lingkungan sekitar.",
-      icon: "/icons/community.svg",
+      title: "RAKER",
+      description: "Rapat Kerja pengurus untuk merumuskan program kerja, evaluasi kegiatan, dan menyusun strategi organisasi.",
+      icon: "/icons/raker.svg",
       image: "/images/program4.jpg",
-      color: "from-teal-500 to-green-500"
+      color: "from-teal-500 to-green-500",
+      bgColor: "bg-teal-50"
     }
   ];
 
   return (
-    <section ref={ref} id="programs" className="py-24 bg-white">
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="text-center mb-16">
+    <section ref={ref} id="programs" className="py-28 bg-white relative">
+      {/* Background Pattern removed */}
+      
+      <div className="container mx-auto px-4 md:px-8 relative z-10">
+        <div className="text-center mb-20">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="inline-block mb-4"
+          >
+            <span className="px-5 py-2 bg-blue-100 text-blue-800 text-sm font-semibold rounded-full">Program Kerja</span>
+          </motion.div>
+          
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
+            className="text-3xl md:text-5xl font-bold text-gray-900 mb-6"
           >
-            Program Unggulan
+            Program Utama <span className="text-blue-600">HMTI</span>
           </motion.h2>
+          
           <motion.div 
-            initial={{ opacity: 0, scale: 0 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="w-24 h-1.5 mx-auto bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full"
+            initial={{ opacity: 0, width: 0 }}
+            animate={isInView ? { opacity: 1, width: "6rem" } : { opacity: 0, width: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="h-1.5 mx-auto bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full mb-6"
           />
+          
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.4 }}
             className="mt-6 text-xl text-gray-600 max-w-3xl mx-auto"
           >
-            Berbagai kegiatan untuk mengembangkan potensi dan kreativitas mahasiswa Teknologi Informasi
+            Kegiatan-kegiatan utama yang diselenggarakan untuk mengembangkan organisasi dan anggota HMTI
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {programs.map((program, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-              transition={{ duration: 0.5, delay: index * 0.1 + 0.5 }}
-              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group h-full flex flex-col"
+              initial={{ opacity: 0, y: 50, scale: 0.95 }}
+              animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 50, scale: 0.95 }}
+              transition={{ 
+                duration: 0.7, 
+                delay: index * 0.15 + 0.5,
+                ease: [0.215, 0.61, 0.355, 1] // cubic-bezier easing for smoother animation
+              }}
+              whileHover={{ 
+                y: -10, 
+                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" 
+              }}
+              className={`${program.bgColor} rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 group h-full flex flex-col`}
             >
-              <div className="relative h-48 w-full overflow-hidden">
-                <div className="absolute inset-0 bg-gray-800 bg-opacity-30 z-10" />
-                <div className={`absolute inset-0 opacity-80 bg-gradient-to-br ${program.color}`} style={{ mixBlendMode: 'multiply' }} />
+              <div className="relative h-52 w-full overflow-hidden">
+                <div className="absolute inset-0 bg-gray-800 bg-opacity-20 z-10" />
+                <div className={`absolute inset-0 opacity-90 bg-gradient-to-br ${program.color}`} style={{ mixBlendMode: 'multiply' }} />
                 <Image
-                  src={program.image}
+                  src={failedImages[program.image] ? "/images/program-placeholder.svg" : program.image}
                   alt={program.title}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
+                
+                {/* Icon with animated background */}
                 <div className="absolute top-4 right-4 z-20">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg">
-                    <Image src={program.icon} alt="" width={24} height={24} />
+                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg group-hover:bg-blue-50 transition-colors duration-300 
+                    border border-white/50">
+                    <motion.div 
+                      whileHover={{ rotate: [0, -10, 10, -10, 0] }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <Image src={program.icon} alt="" width={24} height={24} />
+                    </motion.div>
                   </div>
                 </div>
+                
+                {/* Title Overlay */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-5 z-20">
+                  <h3 className="text-2xl md:text-2xl font-bold text-white group-hover:text-blue-200 transition-colors duration-300">
+                    {program.title}
+                  </h3>
+                  {program.title === "MUBES" && 
+                    <span className="text-sm text-blue-200">Musyawarah Besar</span>
+                  }
+                  {program.title === "LDK" && 
+                    <span className="text-sm text-blue-200">Latihan Dasar Kepemimpinan</span>
+                  }
+                  {program.title === "RAKER" && 
+                    <span className="text-sm text-blue-200">Rapat Kerja</span>
+                  }
+                </div>
               </div>
-              <div className="p-6 flex-grow">
-                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-700 transition-colors duration-300">{program.title}</h3>
-                <p className="text-gray-600 mb-4">{program.description}</p>
-              </div>
-              <div className="px-6 pb-6 mt-auto">
-                <Link 
-                  href={`/program/${program.title.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="inline-flex items-center text-sm font-semibold text-blue-700 hover:text-blue-900 group/link"
-                >
-                  <span>Pelajari Selengkapnya</span>
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    className="h-5 w-5 ml-1 transition-transform duration-300 group-hover/link:translate-x-1" 
-                    viewBox="0 0 20 20" 
-                    fill="currentColor"
-                  >
-                    <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </Link>
-              </div>
+              
+              <motion.div 
+                className="p-6 flex-grow"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
+                <p className="text-gray-700 leading-relaxed">{program.description}</p>
+                <div className="mt-4 w-8 h-1 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full group-hover:w-12 transition-all duration-300"></div>
+              </motion.div>
             </motion.div>
           ))}
         </div>
-
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.6, delay: 1 }}
-          className="mt-16 text-center"
-        >
-          <Link 
-            href="/program" 
-            className="inline-flex items-center px-8 py-4 text-white bg-gradient-to-r from-blue-800 to-blue-600 rounded-lg hover:shadow-lg hover:from-blue-700 hover:to-blue-500 transform hover:-translate-y-0.5 transition-all duration-300"
-          >
-            <span className="text-base font-semibold">Lihat Semua Program</span>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
-          </Link>
-        </motion.div>
       </div>
     </section>
   );

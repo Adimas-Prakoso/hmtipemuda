@@ -2,6 +2,7 @@ import HeroSection from './components/HeroSection';
 import Navbar from './components/Navbar';
 import AboutSection from './components/AboutSection';
 import ProgramHighlightsSection from './components/ProgramHighlightsSection';
+import LeadershipSection from './components/LeadershipSection';
 
 const slides = [
   { image: '/images/hero1.webp', alt: 'Image 1' },
@@ -16,6 +17,7 @@ export default function Home() {
       <HeroSection slides={slides} />
       <AboutSection />
       <ProgramHighlightsSection />
+      <LeadershipSection />
     </main>
   );
 }

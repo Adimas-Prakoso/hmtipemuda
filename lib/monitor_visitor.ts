@@ -43,6 +43,11 @@ export const monitorVisitor = async (req: Request) => {
     const osInfo = parser.getOS();
     const deviceInfo = parser.getDevice();
 
+    // Skip jika IP adalah localhost IPv6
+    if (ip === "::1") {
+      return null;
+    }
+
     // Menyiapkan data visitor
     const visitorData: Visitor = {
       ip,
@@ -77,8 +82,10 @@ export const monitorVisitor = async (req: Request) => {
       visitors = JSON.parse(fileContent);
     }
     
-    // Menambahkan data visitor baru
-    visitors.push(visitorData);
+    // Menambahkan data visitor baru jika bukan localhost
+    if (visitorData) {
+      visitors.push(visitorData);
+    }
     
     // Menyimpan kembali ke file
     fs.writeFileSync(filePath, JSON.stringify(visitors, null, 2));
