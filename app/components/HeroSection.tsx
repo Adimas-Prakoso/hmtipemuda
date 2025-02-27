@@ -69,11 +69,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({ slides }) => {
           key={index}
           src={slide.image}
           alt={slide.alt}
-          layout="fill"
-          objectFit="cover"
-          className={`absolute transition-all duration-1000 ${
+          fill
+          className={`absolute transition-all duration-1000 object-cover ${
             index === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
           }`}
+          priority={index === 0}
         />
       ))}
 
@@ -84,9 +84,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({ slides }) => {
             ${showContent ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}>
             Selamat datang di
           </h2>
-          <h1 className={`text-5xl md:text-7xl lg:text-9xl font-bold text-blue-900 drop-shadow-lg whitespace-normal lg:whitespace-nowrap transform transition-all duration-1000 ease-out delay-200
+          <h1 className={`text-5xl md:text-7xl lg:text-9xl font-bold text-blue-500 drop-shadow-lg whitespace-normal lg:whitespace-nowrap transform transition-all duration-1000 ease-out delay-200
             ${showContent ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}>
-            HMTI <span className="inline-block min-w-[1em] bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">{displayText}</span>
+            HMTI <span className="inline-block min-w-[1em] bg-gradient-to-r text-blue-500 bg-clip-text">{displayText}</span>
             <span className="animate-blink">|</span>
           </h1>
         </div>

@@ -1,8 +1,15 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
+import { 
+  motion, 
+  useScroll, 
+  useTransform, 
+  useInView,
+  easeInOut, 
+  easeOut 
+} from "framer-motion";
 import { useRef, useEffect, useState } from "react";
+import VisiMisiSection from "./VisiMisiSection";
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(false);
@@ -21,13 +28,51 @@ const useMediaQuery = (query: string) => {
 };
 
 export const AboutSection = () => {
-  const ref = useRef(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const aboutRef = useRef<HTMLDivElement>(null);
+  const visionRef = useRef<HTMLDivElement>(null);
+  
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const isInView = useInView(ref, {
+  const isInView = useInView(sectionRef, {
     once: true,
     margin: "0px 0px -200px 0px",
     amount: 0.3
   });
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"]
+  });
+
+  // Improved transform values with proper easing functions
+  const aboutOpacity = useTransform(
+    scrollYProgress, 
+    [0, 0.35, 0.4], 
+    [1, 0.8, 0],
+    { ease: easeInOut }
+  );
+  
+  const visionOpacity = useTransform(
+    scrollYProgress, 
+    [0.4, 0.45, 0.5], 
+    [0, 0.8, 1],
+    { ease: easeInOut }
+  );
+  
+  // Smoother transform transitions with proper easing functions
+  const aboutY = useTransform(
+    scrollYProgress, 
+    [0, 0.4], 
+    [0, -30],
+    { ease: easeOut }
+  );
+  
+  const visionY = useTransform(
+    scrollYProgress, 
+    [0.4, 0.5], 
+    [30, 0],
+    { ease: easeOut }
+  );
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -67,13 +112,24 @@ export const AboutSection = () => {
   };
 
   return (
-    <section ref={ref} id="about" className="w-full min-h-screen py-20 bg-gray-50">
-      <div className="container mx-auto max-w-screen-xl px-4 md:px-8">
+    <section 
+      ref={sectionRef} 
+      id="about" 
+      className="w-full min-h-[200vh] py-20 bg-gray-50 relative"
+    >
+      <div className="container mx-auto max-w-screen-xl px-4 md:px-8 sticky top-20 h-[calc(100vh-40px)]">
+        {/* About Content */}
         <motion.div
+          ref={aboutRef}
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="grid md:grid-cols-2 md:gap-8 items-center min-h-[calc(100vh-160px)]"
+          style={{ 
+            opacity: aboutOpacity,
+            y: aboutY,
+            willChange: "transform, opacity"
+          }}
+          className="grid md:grid-cols-2 md:gap-8 items-center min-h-[calc(100vh-160px)] pt-8 md:pt-0"
         >
           <motion.div
             variants={leftVariants}
@@ -87,12 +143,14 @@ export const AboutSection = () => {
             </div>
             <div className="text-justify text-gray-600 leading-relaxed space-y-8">
               {isMobile ? (
-              <><p>
-                Himpunan Mahasiswa Teknologi Informasi (HMTI) adalah wadah aspirasi dan pelayanan bagi mahasiswa Jurusan Teknologi Informasi. Didirikan pada 02 Februari 2020 di Jakarta, HMTI mendukung pengembangan skill mahasiswa sebagai calon teknisi dan akademisi aktif.
-              </p>
-              <p>
-                HMTI menjadi wadah penting bagi mahasiswa Teknologi Informasi Universitas Bina Sarana Informatika untuk mengembangkan ide-ide brilian dan kemampuan dalam materi informatika, serta kreativitas praktis, menjadikan mereka akademisi profesional.
-              </p></>
+                <>
+                  <p>
+                    Himpunan Mahasiswa Teknologi Informasi (HMTI) adalah wadah aspirasi dan pelayanan bagi mahasiswa Jurusan Teknologi Informasi. Didirikan pada 02 Februari 2020 di Jakarta, HMTI mendukung pengembangan skill mahasiswa sebagai calon teknisi dan akademisi aktif.
+                  </p>
+                  <p>
+                    HMTI menjadi wadah penting bagi mahasiswa Teknologi Informasi Universitas Bina Sarana Informatika untuk mengembangkan ide-ide brilian dan kemampuan dalam materi informatika, serta kreativitas praktis, menjadikan mereka akademisi profesional.
+                  </p>
+                </>
               ) : (
                 <>
                   <p>
@@ -142,6 +200,28 @@ export const AboutSection = () => {
               src="https://sketchfab.com/models/79ae047052694df184812dd5847f7df6/embed?autostart=1&preload=1&transparent=1&ui_hint=0&ui_infos=0&ui_controls=0&ui_watermark=0"
             />
           </motion.div>
+        </motion.div>
+
+        {/* Vision and Mission Content */}
+        <motion.div
+          ref={visionRef}
+          style={{ 
+            opacity: visionOpacity,
+            y: visionY,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            willChange: "transform, opacity",
+            WebkitFontSmoothing: "antialiased",
+            MozOsxFontSmoothing: "grayscale",
+          }}
+          className="flex items-center justify-center"
+        >
+          <div className="w-full h-full px-2 sm:px-4 md:px-8 py-4 md:py-0 overflow-y-auto md:overflow-visible">
+            <VisiMisiSection />
+          </div>
         </motion.div>
       </div>
     </section>

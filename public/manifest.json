@@ -1,0 +1,41 @@
+{
+  "name": "HMTI Pemuda - Himpunan Mahasiswa Teknologi Informasi",
+  "short_name": "HMTI Pemuda",
+  "description": "Website resmi Himpunan Mahasiswa Teknologi Informasi (HMTI) yang berfokus pada pengembangan softskill dan hardskill mahasiswa informatika",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e3a8a",
+  "orientation": "any",
+  "scope": "/",
+  "lang": "id-ID",
+  "categories": ["education", "organization", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Tentang HMTI",
+      "short_name": "Tentang",
+      "description": "Pelajari tentang HMTI Pemuda",
+      "url": "/about",
+      "icons": [
+        {
+          "src": "/icons/shortcut-about-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Program Kegiatan",
+      "short_name": "Program",
+      "description": "Lihat program & kegiatan HMTI",
+      "url": "/program",
+      "icons": [
+        {
+          "src": "/icons/shortcut-program-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
