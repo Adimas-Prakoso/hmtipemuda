@@ -17,18 +17,24 @@ export default function AdminLogin() {
     setError("");
 
     try {
-      // This is a placeholder - in a real app, you would call an API endpoint
-      // to handle authentication
-      console.log("Login attempt:", { nim, password });
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Reset form and redirect would happen after successful login
-      // window.location.href = "/admin/dashboard";
-      
-    } catch {
-      setError("Login gagal. Periksa kembali NIM dan password Anda.");
+      const response = await fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ nim, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Login gagal");
+      }
+
+      // Redirect ke dashboard setelah login berhasil
+      window.location.href = "/admin/dashboard";
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Login gagal. Periksa kembali NIM dan password Anda.");
     } finally {
       setLoading(false);
     }
