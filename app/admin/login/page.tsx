@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { FaLock, FaIdCard, FaArrowRight } from "react-icons/fa";
 
 export default function AdminLogin() {
@@ -11,26 +10,6 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const router = useRouter();
-  
-  // Check if already logged in
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await fetch('/api/auth/verify');
-        const data = await res.json();
-        
-        if (data.authenticated) {
-          router.push('/admin/dashboard');
-        }
-      } catch (error) {
-        // Not authenticated, stay on login page
-        console.error("Auth check error", error);
-      }
-    };
-    
-    checkAuth();
-  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,27 +17,18 @@ export default function AdminLogin() {
     setError("");
 
     try {
-      const response = await fetch('/api/auth/admin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ nim, password }),
-      });
+      // This is a placeholder - in a real app, you would call an API endpoint
+      // to handle authentication
+      console.log("Login attempt:", { nim, password });
       
-      const data = await response.json();
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      if (response.ok && data.success) {
-        // Reset form and redirect to dashboard
-        setNim("");
-        setPassword("");
-        router.push('/admin/dashboard');
-      } else {
-        setError(data.message || "Login gagal. Periksa kembali kredensial Anda.");
-      }
-    } catch (error) {
-      setError("Terjadi kesalahan. Silakan coba lagi nanti.");
-      console.error("Login error:", error);
+      // Reset form and redirect would happen after successful login
+      // window.location.href = "/admin/dashboard";
+      
+    } catch {
+      setError("Login gagal. Periksa kembali NIM dan password Anda.");
     } finally {
       setLoading(false);
     }
