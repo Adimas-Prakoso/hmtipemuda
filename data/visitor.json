@@ -174,5 +174,181 @@
       "type": "Unknown"
     },
     "visitedAt": "2025-02-28T11:34:40.836Z"
+  },
+  {
+    "ip": "182.2.164.16",
+    "location": {
+      "country": "Indonesia",
+      "region": "Jakarta",
+      "city": "Jakarta"
+    },
+    "browser": {
+      "name": "Chrome",
+      "version": "126.0.0.0"
+    },
+    "os": {
+      "name": "Chrome OS",
+      "version": "14541.0.0"
+    },
+    "device": {
+      "vendor": "Unknown",
+      "model": "Unknown",
+      "type": "Unknown"
+    },
+    "visitedAt": "2025-02-28T13:33:20.287Z"
+  },
+  {
+    "ip": "182.2.164.16",
+    "location": {
+      "country": "Indonesia",
+      "region": "Jakarta",
+      "city": "Jakarta"
+    },
+    "browser": {
+      "name": "Chrome",
+      "version": "126.0.0.0"
+    },
+    "os": {
+      "name": "Chrome OS",
+      "version": "14541.0.0"
+    },
+    "device": {
+      "vendor": "Unknown",
+      "model": "Unknown",
+      "type": "Unknown"
+    },
+    "visitedAt": "2025-02-28T13:33:25.352Z"
+  },
+  {
+    "ip": "182.2.164.16",
+    "location": {
+      "country": "Indonesia",
+      "region": "Jakarta",
+      "city": "Jakarta"
+    },
+    "browser": {
+      "name": "Chrome",
+      "version": "126.0.0.0"
+    },
+    "os": {
+      "name": "Chrome OS",
+      "version": "14541.0.0"
+    },
+    "device": {
+      "vendor": "Unknown",
+      "model": "Unknown",
+      "type": "Unknown"
+    },
+    "visitedAt": "2025-02-28T13:33:37.285Z"
+  },
+  {
+    "ip": "182.2.164.16",
+    "location": {
+      "country": "Indonesia",
+      "region": "Jakarta",
+      "city": "Jakarta"
+    },
+    "browser": {
+      "name": "Chrome",
+      "version": "126.0.0.0"
+    },
+    "os": {
+      "name": "Chrome OS",
+      "version": "14541.0.0"
+    },
+    "device": {
+      "vendor": "Unknown",
+      "model": "Unknown",
+      "type": "Unknown"
+    },
+    "visitedAt": "2025-02-28T18:12:11.043Z"
+  },
+  {
+    "ip": "182.2.164.16",
+    "location": {
+      "country": "Indonesia",
+      "region": "Jakarta",
+      "city": "Jakarta"
+    },
+    "browser": {
+      "name": "Chrome",
+      "version": "126.0.0.0"
+    },
+    "os": {
+      "name": "Chrome OS",
+      "version": "14541.0.0"
+    },
+    "device": {
+      "vendor": "Unknown",
+      "model": "Unknown",
+      "type": "Unknown"
+    },
+    "visitedAt": "2025-02-28T18:12:18.772Z"
+  },
+  {
+    "ip": "182.2.164.16",
+    "location": {
+      "country": "Indonesia",
+      "region": "Jakarta",
+      "city": "Jakarta"
+    },
+    "browser": {
+      "name": "Chrome",
+      "version": "126.0.0.0"
+    },
+    "os": {
+      "name": "Chrome OS",
+      "version": "14541.0.0"
+    },
+    "device": {
+      "vendor": "Unknown",
+      "model": "Unknown",
+      "type": "Unknown"
+    },
+    "visitedAt": "2025-02-28T18:15:27.445Z"
+  },
+  {
+    "ip": "182.2.164.16",
+    "location": {
+      "country": "Indonesia",
+      "region": "Jakarta",
+      "city": "Jakarta"
+    },
+    "browser": {
+      "name": "Chrome",
+      "version": "126.0.0.0"
+    },
+    "os": {
+      "name": "Chrome OS",
+      "version": "14541.0.0"
+    },
+    "device": {
+      "vendor": "Unknown",
+      "model": "Unknown",
+      "type": "Unknown"
+    },
+    "visitedAt": "2025-02-28T18:15:47.701Z"
+  },
+  {
+    "ip": "182.2.164.16",
+    "location": {
+      "country": "Indonesia",
+      "region": "Jakarta",
+      "city": "Jakarta"
+    },
+    "browser": {
+      "name": "Chrome",
+      "version": "126.0.0.0"
+    },
+    "os": {
+      "name": "Chrome OS",
+      "version": "14541.0.0"
+    },
+    "device": {
+      "vendor": "Unknown",
+      "model": "Unknown",
+      "type": "Unknown"
+    },
+    "visitedAt": "2025-02-28T18:16:16.761Z"
   }
 ]
