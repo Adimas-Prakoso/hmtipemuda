@@ -1,6 +1,9 @@
 import { Elysia } from 'elysia'
 import os from 'os'
 
+// Track application start time
+const startTime = new Date()
+
 interface StorageError {
   error: string;
 }
@@ -56,9 +59,18 @@ const app = new Elysia({ prefix: '/api' })
         storageInfo = { error: 'Storage information unavailable' };
       }
       
+      // Calculate runtime
+      const currentTime = new Date()
+      const runtime = Math.floor((currentTime.getTime() - startTime.getTime()) / 1000) // Convert to seconds
+
       return {
         success: true,
         data: {
+          runtime: {
+            startTime: startTime.toISOString(),
+            uptime: `${Math.floor(runtime / 3600)}h ${Math.floor((runtime % 3600) / 60)}m ${runtime % 60}s`,
+            uptimeSeconds: runtime
+          },
           ram: {
             total: formatBytes(totalMemory),
             used: formatBytes(usedMemory),

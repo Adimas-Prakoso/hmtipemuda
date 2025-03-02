@@ -526,5 +526,71 @@
       "type": "Unknown"
     },
     "visitedAt": "2025-03-01T09:57:52.468Z"
+  },
+  {
+    "ip": "114.124.239.147",
+    "location": {
+      "country": "Indonesia",
+      "region": "Banten",
+      "city": "Tangerang"
+    },
+    "browser": {
+      "name": "Chrome",
+      "version": "126.0.0.0"
+    },
+    "os": {
+      "name": "Chrome OS",
+      "version": "14541.0.0"
+    },
+    "device": {
+      "vendor": "Unknown",
+      "model": "Unknown",
+      "type": "Unknown"
+    },
+    "visitedAt": "2025-03-02T19:48:15.735Z"
+  },
+  {
+    "ip": "114.124.239.147",
+    "location": {
+      "country": "Indonesia",
+      "region": "Banten",
+      "city": "Tangerang"
+    },
+    "browser": {
+      "name": "Chrome",
+      "version": "126.0.0.0"
+    },
+    "os": {
+      "name": "Chrome OS",
+      "version": "14541.0.0"
+    },
+    "device": {
+      "vendor": "Unknown",
+      "model": "Unknown",
+      "type": "Unknown"
+    },
+    "visitedAt": "2025-03-02T19:48:59.084Z"
+  },
+  {
+    "ip": "114.124.239.147",
+    "location": {
+      "country": "Indonesia",
+      "region": "Banten",
+      "city": "Tangerang"
+    },
+    "browser": {
+      "name": "Chrome",
+      "version": "126.0.0.0"
+    },
+    "os": {
+      "name": "Chrome OS",
+      "version": "14541.0.0"
+    },
+    "device": {
+      "vendor": "Unknown",
+      "model": "Unknown",
+      "type": "Unknown"
+    },
+    "visitedAt": "2025-03-02T19:49:25.813Z"
   }
 ]
