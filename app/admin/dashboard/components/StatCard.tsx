@@ -5,8 +5,8 @@ interface StatCardProps {
   value: string | number;
   icon: IconType;
   trend?: {
-    value: number;
-    isPositive: boolean;
+    value: string | number;
+    text: string;
   };
   className?: string;
 }
@@ -20,9 +20,8 @@ export default function StatCard({ title, value, icon: Icon, trend, className = 
             <p className="text-sm font-medium text-blue-900/60 dark:text-white/60">{title}</p>
             <h3 className="mt-2 text-3xl font-bold text-blue-600 dark:text-blue-400">{value}</h3>
             {trend && (
-              <p className={`mt-2 flex items-center text-sm ${trend.isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                {trend.isPositive ? '↑' : '↓'} {trend.value}%
-                <span className="ml-1 text-blue-900/60 dark:text-white/60">vs last month</span>
+              <p className="mt-2 flex items-center text-sm text-blue-900/60 dark:text-white/60">
+                {trend.value} {trend.text}
               </p>
             )}
           </div>

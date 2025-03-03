@@ -5,6 +5,41 @@ import admins from "@/data/admin.json";
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret_key";
 
+export async function GET(request: NextRequest) {
+  try {
+    // Get the token from the cookie
+    const token = request.cookies.get("admin_token")?.value;
+    
+    if (!token) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    // Verify and decode the token
+    const decoded = jwt.verify(token, JWT_SECRET) as {
+      nim: string;
+      nama: string;
+      role: string;
+    };
+
+    // Return the admin data
+    return NextResponse.json({
+      id: decoded.nim, // Using NIM as ID
+      nama: decoded.nama,
+      nim: decoded.nim,
+      role: decoded.role
+    });
+  } catch (error) {
+    console.error("Auth verification error:", error);
+    return NextResponse.json(
+      { error: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
