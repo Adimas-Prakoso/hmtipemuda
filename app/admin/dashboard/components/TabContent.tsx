@@ -5,6 +5,7 @@ import { TbWorld } from "react-icons/tb";
 import StatCard from "./StatCard";
 import { FiUsers, FiCpu, FiHardDrive } from "react-icons/fi";
 import { BiMemoryCard } from "react-icons/bi";
+import FileManager from "./FileManager";
 
 interface SystemData {
   cpu: {
@@ -267,10 +268,16 @@ const ReportsContent = () => (
   </div>
 );
 
+const FilesContent = () => (
+  <FileManager />
+);
+
 export default function TabContent({ activeTab, systemData, visitorData, isDarkMode }: TabContentProps) {
   switch (activeTab) {
     case 'dashboard':
       return <DashboardContent systemData={systemData} visitorData={visitorData} isDarkMode={isDarkMode} />;
+    case 'files':
+      return <FilesContent />;
     case 'events':
       return <EventsContent />;
     case 'users':

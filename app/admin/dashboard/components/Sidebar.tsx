@@ -5,7 +5,7 @@ import { IconType } from "react-icons";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { RxDashboard } from "react-icons/rx";
 import { BsCalendarEvent } from "react-icons/bs";
-import { FiUsers, FiSettings } from "react-icons/fi";
+import { FiUsers, FiSettings, FiFolder } from "react-icons/fi";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import Logo from "./Logo";
 
@@ -20,6 +20,11 @@ const navItems: NavItem[] = [
     icon: RxDashboard,
     label: "Dashboard",
     href: "/admin/dashboard",
+  },
+  {
+    icon: FiFolder,
+    label: "Files",
+    href: "/admin/files",
   },
   {
     icon: BsCalendarEvent,
