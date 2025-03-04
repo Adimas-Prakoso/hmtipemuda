@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { IconType } from "react-icons";
 import * as Tooltip from "@radix-ui/react-tooltip";
@@ -43,13 +42,14 @@ interface SidebarProps {
   isExpanded: boolean;
   toggleSidebar: () => void;
   isDarkMode: boolean;
+  activeTab: string;
+  onTabChange: (tab: string) => void;
 }
 
-export default function Sidebar({ isExpanded, isDarkMode }: SidebarProps) {
-  const pathname = usePathname();
+export default function Sidebar({ isExpanded, isDarkMode, activeTab, onTabChange }: SidebarProps) {
 
   const NavLink = ({ item }: { item: NavItem }) => {
-    const isActive = pathname === item.href;
+    const isActive = activeTab === item.label.toLowerCase();
     const Icon = item.icon;
 
     return (
@@ -57,6 +57,10 @@ export default function Sidebar({ isExpanded, isDarkMode }: SidebarProps) {
         <Tooltip.Trigger asChild>
           <Link
             href={item.href}
+            onClick={(e) => {
+              e.preventDefault();
+              onTabChange(item.label.toLowerCase());
+            }}
             className={`group relative flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-white/20 ${
               isActive
                 ? "bg-white/15 text-white font-medium before:absolute before:-left-4 before:top-1/2 before:h-6 before:w-1 before:-translate-y-1/2 before:rounded-r before:bg-white before:content-['']"
