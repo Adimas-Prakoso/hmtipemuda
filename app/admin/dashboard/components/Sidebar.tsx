@@ -7,6 +7,7 @@ import { RxDashboard } from "react-icons/rx";
 import { BsCalendarEvent } from "react-icons/bs";
 import { FiUsers, FiSettings, FiFolder } from "react-icons/fi";
 import { HiOutlineDocumentReport } from "react-icons/hi";
+import { MdOutlineSettings } from "react-icons/md";
 import Logo from "./Logo";
 
 interface NavItem {
@@ -40,6 +41,11 @@ const navItems: NavItem[] = [
     icon: HiOutlineDocumentReport,
     label: "Reports",
     href: "/admin/reports",
+  },
+  {
+    icon: MdOutlineSettings,
+    label: "Site Config",
+    href: "/admin/dashboard/site-config",
   },
 ];
 

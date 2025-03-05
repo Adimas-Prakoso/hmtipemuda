@@ -7,7 +7,7 @@ import AchievementsSection from './components/AchievementsSection';
 import UpcomingEventsSection from './components/UpcomingEventsSection';
 import CampusLocationSection from './components/CampusLocationSection';
 import SubscriptionSection from './components/SubscriptionSection';
-import siteData from '@/data/site.json';
+import siteData from '@/data/site_config.json';
 
 export default function Home() {
   return (

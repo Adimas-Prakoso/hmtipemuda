@@ -1,0 +1,94 @@
+{
+  "title": "HMTI Pemuda - Himpunan Mahasiswa Teknik Informatika",
+  "description": "Website resmi Himpunan Mahasiswa Teknik Informatika (HMTI) yang berfokus pada pengembangan softskill dan hardskill mahasiswa informatika",
+  "url": "https://hmtipemuda.site",
+  "siteName": "HMTI Pemuda",
+  "locale": "id-ID",
+  "type": "website",
+  "logo": "https://hmtipemuda.site/logo.png",
+  "foundingDate": "2020-02-02",
+  "organizationType": "EducationalOrganization",
+  "keywords": [
+    "HMTI",
+    "Himpunan Mahasiswa",
+    "Teknik Informatika",
+    "Informatika",
+    "Organisasi Mahasiswa",
+    "Kampus",
+    "Pendidikan",
+    "IT",
+    "Programming",
+    "UBSI",
+    "Universitas Bina Sarana Informatika",
+    "Mahasiswa IT"
+  ],
+  "authors": [
+    {
+      "name": "HMTI Pemuda",
+      "url": "https://hmtipemuda.site"
+    }
+  ],
+  "creator": "HMTI Pemuda",
+  "publisher": "Universitas Bina Sarana Informatika",
+  "alternates": {
+    "canonical": "/",
+    "languages": {
+      "id-ID": "/id",
+      "en-US": "/en"
+    }
+  },
+  "openGraph": {
+    "type": "website",
+    "locale": "id-ID",
+    "url": "https://hmtipemuda.site",
+    "title": "HMTI Pemuda - Himpunan Mahasiswa Teknik Informatika",
+    "description": "Website resmi Himpunan Mahasiswa Teknik Informatika (HMTI) yang berfokus pada pengembangan softskill dan hardskill mahasiswa informatika",
+    "siteName": "HMTI Pemuda",
+    "images": [
+      {
+        "url": "https://hmtipemuda.site/og-image.jpg",
+        "width": 1200,
+        "height": 630,
+        "alt": "HMTI Pemuda - Himpunan Mahasiswa Teknik Informatika"
+      }
+    ]
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "title": "HMTI Pemuda - Himpunan Mahasiswa Teknik Informatika",
+    "description": "Website resmi Himpunan Mahasiswa Teknik Informatika (HMTI) yang berfokus pada pengembangan softskill dan hardskill mahasiswa informatika",
+    "creator": "@hmtipemuda",
+    "images": ["https://hmtipemuda.site/twitter-image.jpg"]
+  },
+  "robotsConfig": {
+    "rules": {
+      "index": true,
+      "follow": true
+    },
+    "googleBot": "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+  },
+  "category": "education",
+  "manifest": "/manifest.json",
+  "socialMedia": {
+    "facebook": "https://www.facebook.com/hmtipemuda",
+    "instagram": "https://www.instagram.com/hmtipemuda",
+    "twitter": "https://twitter.com/hmtipemuda"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Jakarta Barat",
+    "addressRegion": "DKI Jakarta", 
+    "postalCode": "11730",
+    "streetAddress": "Jl. Kamal Raya No.18, RT.6/RW.3, Cengkareng Barat",
+    "addressCountry": "ID"
+  },
+  "parentOrganization": {
+    "@type": "EducationalOrganization",
+    "name": "Universitas Bina Sarana Informatika",
+    "url": "https://www.bsi.ac.id"
+  },
+  "slides": [
+    { "image": "/images/hero1.webp", "alt": "Image 1" },
+    { "image": "/images/hero2.webp", "alt": "Image 2" }
+  ]
+}

@@ -6,6 +6,15 @@ import StatCard from "./StatCard";
 import { FiUsers, FiCpu, FiHardDrive } from "react-icons/fi";
 import { BiMemoryCard } from "react-icons/bi";
 import FileManager from "./FileManager";
+import dynamic from 'next/dynamic';
+
+const SiteConfigPage = dynamic(() => import('../site-config/page'), {
+  loading: () => (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"></div>
+    </div>
+  ),
+});
 
 interface SystemData {
   cpu: {
@@ -126,7 +135,6 @@ const DashboardContent = ({ systemData, visitorData, isDarkMode }: DashboardCont
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        {/* Visitor Chart */}
         <div className="rounded-xl bg-white p-6 shadow-sm dark:bg-gray-800">
           <h3 className="mb-4 text-lg font-semibold text-blue-900 dark:text-white">
             Daily Visitors
@@ -160,7 +168,6 @@ const DashboardContent = ({ systemData, visitorData, isDarkMode }: DashboardCont
           </div>
         </div>
 
-        {/* Browser Distribution */}
         <div className="rounded-xl bg-white p-6 shadow-sm dark:bg-gray-800">
           <h3 className="mb-4 text-lg font-semibold text-blue-900 dark:text-white">
             Browser Distribution
@@ -184,7 +191,6 @@ const DashboardContent = ({ systemData, visitorData, isDarkMode }: DashboardCont
           </div>
         </div>
 
-        {/* Country Distribution */}
         <div className="rounded-xl bg-white p-6 shadow-sm dark:bg-gray-800">
           <h3 className="mb-4 text-lg font-semibold text-blue-900 dark:text-white">
             Visitor Countries
@@ -204,7 +210,6 @@ const DashboardContent = ({ systemData, visitorData, isDarkMode }: DashboardCont
           </div>
         </div>
 
-        {/* System Runtime */}
         <div className="rounded-xl bg-white p-6 shadow-sm dark:bg-gray-800">
           <h3 className="mb-4 text-lg font-semibold text-blue-900 dark:text-white">
             System Information
@@ -284,6 +289,8 @@ export default function TabContent({ activeTab, systemData, visitorData, isDarkM
       return <UsersContent />;
     case 'reports':
       return <ReportsContent />;
+    case 'site config':
+      return <SiteConfigPage />;
     default:
       return <DashboardContent systemData={systemData} visitorData={visitorData} isDarkMode={isDarkMode} />;
   }

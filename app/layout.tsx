@@ -4,18 +4,8 @@ import { ClientMonitor } from "./components/client-monitor";
 import "./globals.css";
 import Script from "next/script";
 
-// Konfigurasi untuk website
-const siteConfig = {
-  title: "HMTI Pemuda - Himpunan Mahasiswa Teknik Informatika",
-  description: "Website resmi Himpunan Mahasiswa Teknik Informatika (HMTI) yang berfokus pada pengembangan softskill dan hardskill mahasiswa informatika",
-  url: "https://hmtipemuda.site",
-  siteName: "HMTI Pemuda",
-  locale: "id-ID",
-  type: "website" as const,
-  logo: "https://hmtipemuda.site/logo.png",
-  foundingDate: "2020-02-02",
-  organizationType: "EducationalOrganization",
-};
+// Import site configuration
+import siteConfig from "@/data/site_config.json";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,77 +26,21 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.siteName}`,
   },
   description: siteConfig.description,
-  keywords: [
-    "HMTI",
-    "Himpunan Mahasiswa",
-    "Teknik Informatika",
-    "Informatika",
-    "Organisasi Mahasiswa",
-    "Kampus",
-    "Pendidikan",
-    "IT",
-    "Programming",
-    "UBSI",
-    "Universitas Bina Sarana Informatika",
-    "Mahasiswa IT",
-  ],
-  authors: [
-    {
-      name: "HMTI Pemuda",
-      url: siteConfig.url,
-    },
-  ],
-  creator: "HMTI Pemuda",
-  publisher: "Universitas Bina Sarana Informatika",
-  alternates: {
-    canonical: "/",
-    languages: {
-      "id-ID": "/id",
-      "en-US": "/en",
-    },
-  },
-  openGraph: {
-    type: siteConfig.type,
-    locale: siteConfig.locale,
-    url: siteConfig.url,
-    title: siteConfig.title,
-    description: siteConfig.description,
-    siteName: siteConfig.siteName,
-    images: [
-      {
-        url: `${siteConfig.url}/og-image.jpg`,
-        width: 1200,
-        height: 630,
-        alt: "HMTI Pemuda - Himpunan Mahasiswa Teknik Informatika",
-      }
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteConfig.title,
-    description: siteConfig.description,
-    creator: "@hmtipemuda", // Ganti dengan username Twitter sebenarnya
-    images: [`${siteConfig.url}/twitter-image.jpg`],
-  },
+  keywords: siteConfig.keywords,
+  authors: siteConfig.authors,
+  creator: siteConfig.creator,
+  publisher: siteConfig.publisher,
+  alternates: siteConfig.alternates,
+  openGraph: siteConfig.openGraph,
+  twitter: siteConfig.twitter,
   robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
+    index: siteConfig.robotsConfig.rules.index,
+    follow: siteConfig.robotsConfig.rules.follow,
+    googleBot: siteConfig.robotsConfig.googleBot
   },
   applicationName: siteConfig.siteName,
-  verification: {
-    // Add these when you have them
-    google: "google-site-verification-code",
-    yandex: "yandex-verification-code",
-  },
-  category: "education",
-  manifest: "/manifest.json",
+  category: siteConfig.category,
+  manifest: siteConfig.manifest,
 };
 
 export const viewport: Viewport = {
@@ -133,33 +67,20 @@ export default function RootLayout({
     url: siteConfig.url,
     logo: siteConfig.logo,
     sameAs: [
-      "https://www.facebook.com/hmtipemuda",
-      "https://www.instagram.com/hmtipemuda",
-      "https://twitter.com/hmtipemuda",
+      siteConfig.socialMedia.facebook,
+      siteConfig.socialMedia.instagram,
+      siteConfig.socialMedia.twitter,
     ],
     description: siteConfig.description,
     foundingDate: siteConfig.foundingDate,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Jakarta Barat",
-      addressRegion: "DKI Jakarta",
-      postalCode: "11730",
-      streetAddress: "Jl. Kamal Raya No.18, RT.6/RW.3, Cengkareng Barat",
-      addressCountry: "ID"
-    },
-    parentOrganization: {
-      "@type": "EducationalOrganization",
-      name: "Universitas Bina Sarana Informatika",
-      url: "https://www.bsi.ac.id"
-    }
+    address: siteConfig.address,
+    parentOrganization: siteConfig.parentOrganization
   };
 
   return (
     <html lang="id" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/apple-icon.png" />
-        <meta name="google-site-verification" content="your-verification-code" />
         <link rel="canonical" href={siteConfig.url} />
         <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
         
