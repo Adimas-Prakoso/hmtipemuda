@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import fs from "fs/promises";
+import AdmZip from "adm-zip";
 
 // Base directory for file operations
 const PUBLIC_DIR = path.join(process.cwd(), "public");
@@ -120,6 +121,34 @@ export async function POST(request: NextRequest) {
         const buffer = Buffer.from(await file.arrayBuffer());
         await fs.writeFile(destPath, buffer);
         return NextResponse.json({ message: "File uploaded successfully" });
+      }
+
+      case "extract": {
+        // Check if file is a zip
+        if (!sourcePath.toLowerCase().endsWith('.zip')) {
+          return NextResponse.json(
+            { error: "Only ZIP files are supported" },
+            { status: 400 }
+          );
+        }
+
+        const zip = new AdmZip(fullSourcePath);
+        const targetDir = path.dirname(fullSourcePath);
+
+        // Validate all paths before extraction
+        for (const entry of zip.getEntries()) {
+          const entryPath = path.join(targetDir, entry.entryName);
+          if (!entryPath.startsWith(PUBLIC_DIR)) {
+            return NextResponse.json(
+              { error: "Invalid zip content" },
+              { status: 400 }
+            );
+          }
+        }
+
+        // Extract the zip file
+        zip.extractAllTo(targetDir, true);
+        return NextResponse.json({ message: "File extracted successfully" });
       }
 
       default:

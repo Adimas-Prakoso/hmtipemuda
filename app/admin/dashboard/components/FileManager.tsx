@@ -1,8 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState, useEffect } from "react";
-import { FiUpload, FiFolder, FiFile, FiEdit2, FiTrash2 } from "react-icons/fi";
-import ImagePreviewModal from "./ImagePreviewModal";
+import { useState, useEffect, useCallback } from "react";
+import { FiUpload, FiFolder, FiFile, FiEdit2, FiTrash2, FiDownload } from "react-icons/fi";
+import FilePreviewModal from "./FilePreviewModal";
 
 interface FileItem {
   name: string;
@@ -12,11 +13,18 @@ interface FileItem {
   modified: string;
 }
 
+interface ContextMenu {
+  x: number;
+  y: number;
+  file: FileItem;
+}
+
 export default function FileManager() {
   const [currentDir, setCurrentDir] = useState("");
   const [files, setFiles] = useState<FileItem[]>([]);
   const [isUploading, setIsUploading] = useState(false);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [previewFile, setPreviewFile] = useState<{src: string; type: "image" | "pdf" | "text" | "markdown"} | null>(null);
+  const [contextMenu, setContextMenu] = useState<ContextMenu | null>(null);
 
   const loadFiles = async (dir: string) => {
     try {
@@ -98,6 +106,24 @@ export default function FileManager() {
     }
   };
 
+  const handleExtract = async (file: FileItem) => {
+    try {
+      const formData = new FormData();
+      formData.append("action", "extract");
+      formData.append("path", file.path);
+
+      const response = await fetch("/api/files", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error("Extract failed");
+      loadFiles(currentDir);
+    } catch (error) {
+      console.error("Extract error:", error);
+    }
+  };
+
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return "0 Bytes";
     const k = 1024;
@@ -113,21 +139,88 @@ export default function FileManager() {
     );
   };
 
+  const isPdfFile = (filename: string) => {
+    return filename.toLowerCase().endsWith(".pdf");
+  };
+
+  const isTextFile = (filename: string) => {
+    const textExtensions = [".txt", ".log", ".json", ".xml", ".csv"];
+    return textExtensions.some((ext) =>
+      filename.toLowerCase().endsWith(ext)
+    );
+  };
+
+  const isMarkdownFile = (filename: string) => {
+    const mdExtensions = [".md", ".markdown"];
+    return mdExtensions.some((ext) =>
+      filename.toLowerCase().endsWith(ext)
+    );
+  };
+
+  const isCompressedFile = (filename: string) => {
+    const compressedExtensions = [".zip", ".rar", ".7z", ".tar", ".gz"];
+    return compressedExtensions.some((ext) =>
+      filename.toLowerCase().endsWith(ext)
+    );
+  };
+
+  const handleContextMenu = (e: React.MouseEvent, file: FileItem) => {
+    e.preventDefault();
+    setContextMenu({
+      x: e.clientX,
+      y: e.clientY,
+      file,
+    });
+  };
+
+  const closeContextMenu = useCallback(() => {
+    setContextMenu(null);
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("click", closeContextMenu);
+    return () => {
+      document.removeEventListener("click", closeContextMenu);
+    };
+  }, [closeContextMenu]);
+
   const getFileIcon = (file: FileItem) => {
     if (file.isDirectory) {
-      return <FiFolder className="h-5 w-5 text-blue-500" />;
+      return <FiFolder className="h-10 w-10 text-blue-500" />;
     }
     if (isImageFile(file.name)) {
       return (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={`/${file.path}`}
           alt={file.name}
-          className="h-8 w-8 rounded object-cover"
+          className="h-24 w-24 rounded object-cover"
         />
       );
     }
-    return <FiFile className="h-5 w-5 text-gray-500" />;
+    if (isMarkdownFile(file.name)) {
+      return <FiFile className="h-10 w-10 text-purple-500" />;
+    }
+    if (isTextFile(file.name)) {
+      return <FiFile className="h-10 w-10 text-green-500" />;
+    }
+    if (isPdfFile(file.name)) {
+      return <FiFile className="h-10 w-10 text-red-500" />;
+    }
+    return <FiFile className="h-10 w-10 text-gray-500" />;
+  };
+
+  const handleFileClick = (file: FileItem) => {
+    if (file.isDirectory) {
+      setCurrentDir(file.path);
+    } else if (isImageFile(file.name)) {
+      setPreviewFile({ src: `/${file.path}`, type: "image" });
+    } else if (isPdfFile(file.name)) {
+      setPreviewFile({ src: `/${file.path}`, type: "pdf" });
+    } else if (isMarkdownFile(file.name)) {
+      setPreviewFile({ src: `/${file.path}`, type: "markdown" });
+    } else if (isTextFile(file.name)) {
+      setPreviewFile({ src: `/${file.path}`, type: "text" });
+    }
   };
 
   return (
@@ -186,97 +279,83 @@ export default function FileManager() {
           </div>
         </div>
 
-        {/* File List */}
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead className="bg-gray-50 dark:bg-gray-900/50">
-              <tr>
-                <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                  Name
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                  Size
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                  Modified
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-transparent">
-              {files.map((file) => (
-                <tr
-                  key={file.path}
-                  className="group hover:bg-gray-50 dark:hover:bg-gray-800/50"
-                >
-                  <td className="whitespace-nowrap px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      {getFileIcon(file)}
-                      <button
-                        onClick={() => {
-                          if (file.isDirectory) {
-                            setCurrentDir(file.path);
-                          } else if (isImageFile(file.name)) {
-                            setPreviewImage(`/${file.path}`);
-                          }
-                        }}
-                        className={`${
-                          file.isDirectory || isImageFile(file.name)
-                            ? "text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300"
-                            : "text-gray-900 dark:text-gray-100"
-                        }`}
-                      >
-                        {file.name}
-                      </button>
-                    </div>
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                    {file.isDirectory ? "--" : formatFileSize(file.size)}
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                    {new Date(file.modified).toLocaleDateString()}
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-4">
-                    <div className="flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-                      <button
-                        onClick={() => {
-                          const newName = prompt(
-                            "Enter new name:",
-                            file.name
-                          );
-                          if (newName && newName !== file.name) {
-                            handleRename(file, newName);
-                          }
-                        }}
-                        className="rounded p-1 text-gray-600 hover:bg-gray-100 hover:text-blue-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-blue-400"
-                        title="Rename"
-                      >
-                        <FiEdit2 className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(file)}
-                        className="rounded p-1 text-gray-600 hover:bg-gray-100 hover:text-red-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-red-400"
-                        title="Delete"
-                      >
-                        <FiTrash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* Grid View */}
+        <div className="grid grid-cols-2 gap-4 p-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+          {files.map((file) => (
+            <div
+              key={file.path}
+              onContextMenu={(e) => handleContextMenu(e, file)}
+              onClick={() => handleFileClick(file)}
+              className="group relative cursor-pointer rounded-lg border border-gray-200 p-4 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800/50"
+            >
+              <div className="flex flex-col items-center gap-2">
+                {getFileIcon(file)}
+                <span className="mt-2 max-w-full truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+                  {file.name}
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {file.isDirectory ? "--" : formatFileSize(file.size)}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Image Preview Modal */}
-      {previewImage && (
-        <ImagePreviewModal
-          src={previewImage}
+      {/* Context Menu */}
+      {contextMenu && (
+        <div
+          className="fixed z-50 min-w-[160px] rounded-lg bg-white shadow-lg dark:bg-gray-800"
+          style={{ top: contextMenu.y, left: contextMenu.x }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="py-2">
+            <button
+              onClick={() => {
+                const newName = prompt("Enter new name:", contextMenu.file.name);
+                if (newName && newName !== contextMenu.file.name) {
+                  handleRename(contextMenu.file, newName);
+                }
+                closeContextMenu();
+              }}
+              className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+            >
+              <FiEdit2 className="mr-2 h-4 w-4" />
+              Rename
+            </button>
+            <button
+              onClick={() => {
+                handleDelete(contextMenu.file);
+                closeContextMenu();
+              }}
+              className="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-700"
+            >
+              <FiTrash2 className="mr-2 h-4 w-4" />
+              Delete
+            </button>
+            {isCompressedFile(contextMenu.file.name) && (
+              <button
+                onClick={() => {
+                  handleExtract(contextMenu.file);
+                  closeContextMenu();
+                }}
+                className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+              >
+                <FiDownload className="mr-2 h-4 w-4" />
+                Extract
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* File Preview Modal */}
+      {previewFile && (
+        <FilePreviewModal
+          src={previewFile.src}
+          type={previewFile.type}
           alt="Preview"
-          onClose={() => setPreviewImage(null)}
+          onClose={() => setPreviewFile(null)}
         />
       )}
     </div>

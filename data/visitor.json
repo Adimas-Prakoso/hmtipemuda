@@ -2242,5 +2242,49 @@
       "type": "Unknown"
     },
     "visitedAt": "2025-03-04T19:32:12.764Z"
+  },
+  {
+    "ip": "114.124.215.19",
+    "location": {
+      "country": "Indonesia",
+      "region": "West Java",
+      "city": "Bogor"
+    },
+    "browser": {
+      "name": "Chrome",
+      "version": "126.0.0.0"
+    },
+    "os": {
+      "name": "Chrome OS",
+      "version": "14541.0.0"
+    },
+    "device": {
+      "vendor": "Unknown",
+      "model": "Unknown",
+      "type": "Unknown"
+    },
+    "visitedAt": "2025-03-05T19:23:09.483Z"
+  },
+  {
+    "ip": "114.124.215.19",
+    "location": {
+      "country": "Indonesia",
+      "region": "West Java",
+      "city": "Bogor"
+    },
+    "browser": {
+      "name": "Chrome",
+      "version": "126.0.0.0"
+    },
+    "os": {
+      "name": "Chrome OS",
+      "version": "14541.0.0"
+    },
+    "device": {
+      "vendor": "Unknown",
+      "model": "Unknown",
+      "type": "Unknown"
+    },
+    "visitedAt": "2025-03-05T19:23:20.677Z"
   }
 ]
