@@ -2286,5 +2286,27 @@
       "type": "Unknown"
     },
     "visitedAt": "2025-03-05T19:23:20.677Z"
+  },
+  {
+    "ip": "114.124.207.50",
+    "location": {
+      "country": "Indonesia",
+      "region": "Banten",
+      "city": "Tangerang"
+    },
+    "browser": {
+      "name": "Chrome",
+      "version": "126.0.0.0"
+    },
+    "os": {
+      "name": "Chrome OS",
+      "version": "14541.0.0"
+    },
+    "device": {
+      "vendor": "Unknown",
+      "model": "Unknown",
+      "type": "Unknown"
+    },
+    "visitedAt": "2025-03-05T19:29:53.772Z"
   }
 ]
