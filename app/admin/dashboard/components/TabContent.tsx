@@ -16,6 +16,14 @@ const SiteConfigPage = dynamic(() => import('../site-config/page'), {
   ),
 });
 
+const WhatsAppPage = dynamic(() => import('../whatsapp/page'), {
+  loading: () => (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"></div>
+    </div>
+  ),
+});
+
 interface SystemData {
   cpu: {
     model: string;
@@ -277,6 +285,7 @@ const FilesContent = () => (
   <FileManager />
 );
 
+
 export default function TabContent({ activeTab, systemData, visitorData, isDarkMode }: TabContentProps) {
   switch (activeTab) {
     case 'dashboard':
@@ -291,6 +300,8 @@ export default function TabContent({ activeTab, systemData, visitorData, isDarkM
       return <ReportsContent />;
     case 'site config':
       return <SiteConfigPage />;
+    case 'whatsapp':
+      return <WhatsAppPage />;
     default:
       return <DashboardContent systemData={systemData} visitorData={visitorData} isDarkMode={isDarkMode} />;
   }

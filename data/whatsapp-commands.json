@@ -1,0 +1,20 @@
+{
+  "!neko": {
+    "type": "image",
+    "response": "",
+    "caseInsensitive": false,
+    "mediaUrl": "https://api.lolhuman.xyz/api/random2/neko?apikey=3a72c9c3a6716dcc576300f4",
+    "caption": "Neko chan :3",
+    "apiUrl": "",
+    "apiResponsePath": "result"
+  },
+  "!faktaunik": {
+    "type": "api",
+    "response": "",
+    "caseInsensitive": false,
+    "mediaUrl": "",
+    "caption": "",
+    "apiUrl": "https://api.lolhuman.xyz/api/random/faktaunik?apikey=3a72c9c3a6716dcc576300f4",
+    "apiResponsePath": "result"
+  }
+}

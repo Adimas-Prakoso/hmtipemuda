@@ -104,7 +104,19 @@ export default function AdminDashboard() {
   const [adminData, setAdminData] = useState({ id: '', nama: '', role: '' });
   const [isExpanded, setIsExpanded] = useState(false);
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState(() => {
+    if (typeof window !== 'undefined') {
+      // Check if there's a selected tab in localStorage (for redirects from WhatsApp page)
+      const selectedTab = localStorage.getItem('selectedTab');
+      if (selectedTab) {
+        // Clear the selected tab from localStorage after using it
+        localStorage.removeItem('selectedTab');
+        return selectedTab;
+      }
+      return 'dashboard';
+    }
+    return 'dashboard';
+  });
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedMode = localStorage.getItem('darkMode');

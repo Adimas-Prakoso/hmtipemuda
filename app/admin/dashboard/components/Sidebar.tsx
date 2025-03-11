@@ -7,7 +7,7 @@ import { RxDashboard } from "react-icons/rx";
 import { BsCalendarEvent } from "react-icons/bs";
 import { FiUsers, FiSettings, FiFolder } from "react-icons/fi";
 import { HiOutlineDocumentReport } from "react-icons/hi";
-import { MdOutlineSettings } from "react-icons/md";
+import { IoLogoWhatsapp, IoEarthOutline } from "react-icons/io5";
 import Logo from "./Logo";
 
 interface NavItem {
@@ -43,7 +43,12 @@ const navItems: NavItem[] = [
     href: "/admin/reports",
   },
   {
-    icon: MdOutlineSettings,
+    icon: IoLogoWhatsapp,
+    label: "WhatsApp",
+    href: "/admin/dashboard/whatsapp", // Changed to use the tab system
+  },
+  {
+    icon: IoEarthOutline,
     label: "Site Config",
     href: "/admin/dashboard/site-config",
   },
