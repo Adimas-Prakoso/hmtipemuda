@@ -41,6 +41,7 @@ interface SessionConfig {
   id: string;
   name: string;
   enabled: boolean;
+  commandsEnabled: boolean; // Whether this session should respond to commands
   createdAt: string;
 }
 
@@ -217,6 +218,15 @@ async function connectToWhatsApp(sessionId: string) {
         // Mark message as read (blue checkmarks)
         if (message.key.remoteJid) {
           await sessionState?.sock?.readMessages([message.key]);
+        }
+        
+        // Find the current session in the sessions array
+        const currentSession = sessions.find(s => s.id === sessionId);
+        
+        // If commands are disabled for this session, only mark as read but don't process commands
+        if (!currentSession?.commandsEnabled) {
+          console.log(`Commands disabled for session ${sessionId}, not processing commands`);
+          continue;
         }
         
         const messageText = message.message?.conversation ||
@@ -481,6 +491,7 @@ export async function POST(request: NextRequest) {
         id: sessionId,
         name,
         enabled: true,
+        commandsEnabled: true, // Default to enabled
         createdAt: new Date().toISOString()
       };
       
@@ -684,6 +695,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: `Session ${sessions[sessionIndex].enabled ? 'enabled' : 'disabled'} successfully`
+      });
+    }
+    
+    case 'toggleSessionCommands': {
+      const { sessionId, commandsEnabled } = data;
+      if (!sessionId) {
+        return NextResponse.json({ success: false, message: 'Session ID is required' });
+      }
+      
+      const sessionIndex = sessions.findIndex(s => s.id === sessionId);
+      if (sessionIndex === -1) {
+        return NextResponse.json({ success: false, message: 'Session not found' });
+      }
+      
+      sessions[sessionIndex].commandsEnabled = commandsEnabled !== undefined ? commandsEnabled : !sessions[sessionIndex].commandsEnabled;
+      await saveSessions();
+      
+      return NextResponse.json({
+        success: true,
+        message: `Command responses ${sessions[sessionIndex].commandsEnabled ? 'enabled' : 'disabled'} for this session`
       });
     }
     

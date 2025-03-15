@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { IoMdAdd, IoMdTrash } from 'react-icons/io';
+import { IoMdAdd, IoMdTrash, IoMdChatbubbles } from 'react-icons/io';
 import { IoToggle } from 'react-icons/io5';
 import { toast } from 'react-hot-toast';
 
@@ -11,6 +11,7 @@ interface SessionConfig {
   id: string;
   name: string;
   enabled: boolean;
+  commandsEnabled: boolean;
   createdAt: string;
   status?: 'connecting' | 'connected' | 'disconnected';
   qrCode?: string | null;
@@ -260,6 +261,38 @@ export default function WhatsAppPage() {
     } catch (error) {
       console.error('Error toggling session:', error);
       toast.error('Failed to toggle session');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Toggle command responses for a session
+  const toggleSessionCommands = async (sessionId: string, currentCommandsEnabled: boolean) => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/whatsapp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'toggleSessionCommands',
+          sessionId,
+          commandsEnabled: !currentCommandsEnabled,
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        toast.success(data.message);
+        fetchData();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error('Error toggling session commands:', error);
+      toast.error('Failed to toggle command responses');
     } finally {
       setLoading(false);
     }
@@ -602,7 +635,6 @@ export default function WhatsAppPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Session List */}
             <div className={`rounded-xl p-6 ${currentStyles.shadow} ${currentStyles.cardBg}`}>
-              <h2 className={`text-xl font-semibold mb-4 ${currentStyles.textColor}`}>WhatsApp Sessions</h2>
               {/* Remove duplicate tab buttons */}
               
               <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 space-y-4 md:space-y-0">
@@ -686,6 +718,16 @@ export default function WhatsAppPage() {
                             title={session.enabled ? 'Disable session' : 'Enable session'}
                           >
                             <IoToggle className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleSessionCommands(session.id, session.commandsEnabled);
+                            }}
+                            className={`p-1.5 rounded-full ${session.commandsEnabled ? 'text-blue-500 hover:text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/30' : 'text-gray-500 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'} transition-colors`}
+                            title={session.commandsEnabled ? 'Disable command responses' : 'Enable command responses'}
+                          >
+                            <IoMdChatbubbles className="h-4 w-4" />
                           </button>
                           <button
                             onClick={(e) => {
