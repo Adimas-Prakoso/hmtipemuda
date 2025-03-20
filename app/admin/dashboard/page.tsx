@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -101,6 +102,7 @@ interface VisitorStats {
 }
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const [adminData, setAdminData] = useState({ id: '', nama: '', role: '' });
   const [isExpanded, setIsExpanded] = useState(false);
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
@@ -128,6 +130,31 @@ export default function AdminDashboard() {
   const [visitorData, setVisitorData] = useState<VisitorStats | null>(null);
 
   const adminMenuRef = useRef<HTMLDivElement>(null);
+
+  // Handle sign out functionality
+  const handleSignOut = async () => {
+    try {
+      // Call the logout API endpoint
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        // Clear any client-side auth data
+        document.cookie = 'admin_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict';
+        
+        // Redirect to login page
+        router.push('/admin/login');
+      } else {
+        console.error('Logout failed');
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchAdminData = async () => {
@@ -277,7 +304,7 @@ export default function AdminDashboard() {
                       <hr className="my-1 dark:border-gray-700" />
                       <button
                         className="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-blue-600 transition-colors hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-gray-700"
-                        onClick={() => console.log('Logout clicked')}
+                        onClick={handleSignOut}
                       >
                         <BiLogOut className="h-4 w-4" />
                         Sign out

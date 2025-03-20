@@ -1,16 +1,9 @@
 [
   {
-    "id": "session_1741479699421",
-    "name": "HMTI Bot 1",
+    "id": "session_1742192477838",
+    "name": "Bot1",
     "enabled": true,
-    "createdAt": "2025-03-09T00:21:39.421Z",
-    "commandsEnabled": true
-  },
-  {
-    "id": "session_1741479789498",
-    "name": "HMTI Bot 2",
-    "enabled": true,
-    "createdAt": "2025-03-09T00:23:09.498Z",
-    "commandsEnabled": false
+    "commandsEnabled": true,
+    "createdAt": "2025-03-17T06:21:17.838Z"
   }
 ]

@@ -1,4 +1,100 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { applyBaileysPolyfills } from '../../../lib/baileys-polyfill.js';
+
+/**
+ * CRITICAL PRODUCTION PATCH
+ * 
+ * This section contains direct patches for the Baileys library to work in production.
+ * DO NOT REMOVE OR MODIFY THIS SECTION unless you know what you're doing.
+ */
+
+// Direct mask function implementation
+function maskFn(source: Uint8Array, mask: Uint8Array, output: Uint8Array, offset: number, length: number): Uint8Array {
+  for (let i = 0; i < length; i++) {
+    output[offset + i] = source[i] ^ mask[i & 3];
+  }
+  return output;
+}
+
+// Patch the global t object directly in the module scope
+// This is necessary for Baileys to work in production
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const globalScope = (typeof globalThis !== 'undefined' ? globalThis : typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : {}) as any;
+
+// Create the t object if it doesn't exist
+if (!globalScope.t) {
+  globalScope.t = {};
+}
+
+// Add the mask function to the t object
+globalScope.t.mask = maskFn;
+
+// Also patch the WebSocket object if it exists
+if (typeof globalScope.WebSocket !== 'undefined') {
+  globalScope.WebSocket.mask = maskFn;
+  if (globalScope.WebSocket.prototype) {
+    globalScope.WebSocket.prototype.mask = maskFn;
+  }
+}
+
+// Add mask as a global function
+globalScope.mask = maskFn;
+
+// Patch the exports object if it exists
+if (typeof exports !== 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (exports as any).mask = maskFn;
+}
+
+// Try to patch the module object if it exists
+if (typeof module !== 'undefined' && module.exports) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (module.exports as any).mask = maskFn;
+}
+
+console.log('Direct WebSocket patches applied at module scope');
+
+// Apply additional patches for Bun and production compatibility
+try {
+  // First try to apply the comprehensive Baileys polyfills
+  try {
+    applyBaileysPolyfills();
+    console.log('Applied Baileys polyfills successfully');
+  } catch (polyfillError) {
+    console.warn('Failed to apply Baileys polyfills, falling back to direct patches:', polyfillError);
+    
+    // Fallback: Add mask function to various objects directly
+    if (typeof globalThis !== 'undefined') {
+      // Add mask to WebSocket if it exists
+      if (typeof globalThis.WebSocket !== 'undefined') {
+        // Add the mask function to WebSocket constructor and prototype
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const WebSocketAny = globalThis.WebSocket as any;
+        WebSocketAny.mask = maskFn;
+        WebSocketAny.prototype.mask = maskFn;
+        console.log('Added mask function to WebSocket');
+      }
+      
+      // Create a global t object with mask function
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const globalAny = globalThis as any;
+      if (!globalAny.t) {
+        globalAny.t = {};
+      }
+      globalAny.t.mask = maskFn;
+      console.log('Created global t object with mask function');
+      
+      // Add mask as a global function
+      globalAny.mask = maskFn;
+      console.log('Added global mask function');
+    }
+  }
+  
+  console.log(`WebSocket patches applied for ${process.env.NODE_ENV} environment`);
+} catch (error) {
+  console.error('Failed to apply WebSocket patches:', error);
+}
+
 import { makeWASocket, DisconnectReason, fetchLatestBaileysVersion } from '@whiskeysockets/baileys';
 import { useMultiFileAuthState as baileysUseMultiFileAuthState } from '@whiskeysockets/baileys';
 import { Boom } from '@hapi/boom';
