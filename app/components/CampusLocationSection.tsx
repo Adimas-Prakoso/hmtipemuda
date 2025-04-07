@@ -116,7 +116,7 @@ const CampusLocationSection = () => {
             transition={{ duration: 0.6, delay: 0.5 }}
           >
             <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.0345569193586!2d106.7314746123677!3d-6.137482460153097!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6a1d5d6cb5e35d%3A0xd77605b6b322a742!2sUniversitas%20Bina%20Sarana%20Informatika%20Kampus%20Cengkareng%20(UBSI%20Cengkareng)!5e0!3m2!1sid!2sid!4v1701106125658!5m2!1sid!2sid" 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.5399071854526!2d106.8840800114891!3d-6.192259360642775!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f4eba2c078a3%3A0x3e10b38445474a73!2sUniversitas%20BSI%20Kampus%20Pemuda!5e0!3m2!1sid!2sid!4v1743989957653!5m2!1sid!2sid" 
               width="100%" 
               height="100%" 
               style={{ border: 0 }} 
@@ -200,7 +200,7 @@ const CampusLocationSection = () => {
               className="flex justify-center mt-6"
             >
               <Link 
-                href="https://goo.gl/maps/XG6YqZTmggorXQPt5" 
+                href="https://maps.google.com/maps/dir//Universitas+BSI+Kampus+Pemuda+Jl.+Kayu+Jati+V+No.2+RT.8%2FRW.5,+Rawamangun+Kec.+Pulo+Gadung,+Kota+Jakarta+Timur,+Daerah+Khusus+Ibukota+Jakarta+13220/@-6.1922647,106.8866603,16z/data=!4m5!4m4!1m0!1m2!1m1!1s0x2e69f4eba2c078a3:0x3e10b38445474a73" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center px-6 py-3.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow hover:shadow-lg"

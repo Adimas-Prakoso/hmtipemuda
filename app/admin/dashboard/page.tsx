@@ -18,6 +18,7 @@ import Sidebar from "./components/Sidebar";
 import TabContent from "./components/TabContent";
 import { FiMenu, FiChevronsLeft, FiSun, FiMoon } from "react-icons/fi";
 import { BiLogOut } from "react-icons/bi";
+import NetworkStatus from "./components/NetworkStatus";
 
 // Register ChartJS components
 ChartJS.register(
@@ -323,7 +324,11 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div className="flex items-center">
+              <div className="flex items-center gap-4">
+                {/* Network Status Indicator */}
+                <NetworkStatus className="px-3 py-2 rounded-lg bg-white/70 dark:bg-gray-800/70 shadow-md hover:shadow-lg transition-all duration-300" />
+                
+                {/* Theme Toggle Button */}
                 <button
                   onClick={toggleDarkMode}
                   className="group rounded-lg p-2 text-blue-600 hover:bg-blue-100 dark:text-yellow-400 dark:hover:bg-gray-800"
