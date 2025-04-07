@@ -14,6 +14,7 @@ import {
   Legend,
   ArcElement
 } from 'chart.js';
+import zoomPlugin from 'chartjs-plugin-zoom';
 import Sidebar from "./components/Sidebar";
 import TabContent from "./components/TabContent";
 import { FiMenu, FiChevronsLeft, FiSun, FiMoon } from "react-icons/fi";
@@ -29,7 +30,8 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement
+  ArcElement,
+  zoomPlugin
 );
 
 const CurrentTime = () => {

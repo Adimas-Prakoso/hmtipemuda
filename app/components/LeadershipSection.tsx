@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useInView } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,34 +10,81 @@ const LeadershipSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
+  const [leadershipTeam, setLeadershipTeam] = useState<Array<{
+    name: string;
+    position: string;
+    department: string;
+    imagePath: string;
+  }>>([]);
 
-  // Leadership team data with image paths
-  const leadershipTeam = [
-    {
-      name: "Ahmad Fauzi",
-      position: "Ketua HMTI",
-      department: "Kepemimpinan",
-      imagePath: "/images/anggota/ahmad-fauzi.jpg",
-    },
-    {
-      name: "Dina Aulia",
-      position: "Wakil Ketua",
-      department: "Kepemimpinan",
-      imagePath: "/images/anggota/dina-aulia.jpg",
-    },
-    {
-      name: "Rizky Pratama",
-      position: "Sekretaris",
-      department: "Kesekretariatan",
-      imagePath: "/images/anggota/rizky-pratama.jpg",
-    },
-    {
-      name: "Indah Permata",
-      position: "Bendahara",
-      department: "Keuangan",
-      imagePath: "/images/anggota/indah-permata.jpg",
-    },
-  ];
+  // Fetch leadership team data from site config
+  useEffect(() => {
+    fetch('/api/site-config')
+      .then(res => res.json())
+      .then(data => {
+        if (data.leadershipTeam && Array.isArray(data.leadershipTeam)) {
+          setLeadershipTeam(data.leadershipTeam);
+        } else {
+          // Fallback to default data if not available in config
+          setLeadershipTeam([
+            {
+              name: "Ahmad Fauzi",
+              position: "Ketua HMTI",
+              department: "Kepemimpinan",
+              imagePath: "/images/anggota/ahmad-fauzi.jpg",
+            },
+            {
+              name: "Dina Aulia",
+              position: "Wakil Ketua",
+              department: "Kepemimpinan",
+              imagePath: "/images/anggota/dina-aulia.jpg",
+            },
+            {
+              name: "Rizky Pratama",
+              position: "Sekretaris",
+              department: "Kesekretariatan",
+              imagePath: "/images/anggota/rizky-pratama.jpg",
+            },
+            {
+              name: "Indah Permata",
+              position: "Bendahara",
+              department: "Keuangan",
+              imagePath: "/images/anggota/indah-permata.jpg",
+            },
+          ]);
+        }
+      })
+      .catch(error => {
+        console.error('Failed to fetch leadership team data:', error);
+        // Use default data on error
+        setLeadershipTeam([
+          {
+            name: "Ahmad Fauzi",
+            position: "Ketua HMTI",
+            department: "Kepemimpinan",
+            imagePath: "/images/anggota/ahmad-fauzi.jpg",
+          },
+          {
+            name: "Dina Aulia",
+            position: "Wakil Ketua",
+            department: "Kepemimpinan",
+            imagePath: "/images/anggota/dina-aulia.jpg",
+          },
+          {
+            name: "Rizky Pratama",
+            position: "Sekretaris",
+            department: "Kesekretariatan",
+            imagePath: "/images/anggota/rizky-pratama.jpg",
+          },
+          {
+            name: "Indah Permata",
+            position: "Bendahara",
+            department: "Keuangan",
+            imagePath: "/images/anggota/indah-permata.jpg",
+          },
+        ]);
+      });
+  }, []);
 
   // Handle image load error just once per image
   const handleImageError = (imagePath: string) => {

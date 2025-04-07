@@ -1,6 +1,7 @@
 "use client";
 
 import { Line, Doughnut } from 'react-chartjs-2';
+import { Chart } from 'chart.js';
 import { TbWorld } from "react-icons/tb";
 import StatCard from "./StatCard";
 import { FiUsers, FiCpu, FiHardDrive } from "react-icons/fi";
@@ -164,15 +165,75 @@ const DashboardContent = ({ systemData, visitorData, isDarkMode }: DashboardCont
                     grid: {
                       color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
                     },
+                    ticks: {
+                      autoSkip: false,
+                      maxRotation: 45,
+                      minRotation: 45
+                    }
                   },
                 },
                 plugins: {
                   legend: {
                     display: false,
                   },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return context[0].label;
+                      },
+                      label: (context) => {
+                        return `Visitors: ${context.raw}`;
+                      }
+                    }
+                  },
+                  zoom: {
+                    pan: {
+                      enabled: true,
+                      mode: 'x',
+                      modifierKey: 'shift',
+                    },
+                    zoom: {
+                      wheel: {
+                        enabled: true,
+                      },
+                      pinch: {
+                        enabled: true
+                      },
+                      mode: 'x',
+                      drag: {
+                        enabled: true,
+                        backgroundColor: 'rgba(59, 130, 246, 0.3)',
+                        borderColor: 'rgb(59, 130, 246)',
+                        borderWidth: 1
+                      }
+                    },
+                    limits: {
+                      x: {min: 'original', max: 'original'}
+                    }
+                  }
                 },
+                interaction: {
+                  mode: 'index',
+                  intersect: false,
+                }
               }}
             />
+            <div className="mt-3 flex justify-center gap-2">
+              <button 
+                onClick={() => {
+                  const chartInstance = document.querySelector('canvas');
+                  if (chartInstance) {
+                    const chart = Chart.getChart(chartInstance);
+                    if (chart) {
+                      chart.resetZoom();
+                    }
+                  }
+                }}
+                className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Reset Zoom
+              </button>
+            </div>
           </div>
         </div>
 

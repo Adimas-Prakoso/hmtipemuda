@@ -40,7 +40,7 @@ const AnimatedCounter = ({ value, title, icon }: { value: number; title: string;
       </div>
       <h3 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
         {count}
-        {title.includes("Kegiatan") && <span>+</span>}
+        {title.includes("Kegiatan")}
       </h3>
       <p className="text-gray-600 font-medium text-center">{title}</p>
     </div>
@@ -50,69 +50,133 @@ const AnimatedCounter = ({ value, title, icon }: { value: number; title: string;
 const AchievementsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
-  
-  const stats = [
-    {
-      value: 250,
-      title: "Anggota",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
-        </svg>
-      )
-    },
-    {
-      value: 45,
-      title: "Kegiatan",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
-          <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
-        </svg>
-      )
-    },
-    {
-      value: 12,
-      title: "Penghargaan",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-        </svg>
-      )
-    },
-    {
-      value: 3,
-      title: "Tahun",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
-          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-        </svg>
-      )
-    }
-  ];
-  
-  const achievements = [
-    {
-      title: "Kompetisi Nasional",
-      description: "Juara 1 dalam Kompetisi Pemrograman Nasional antar Universitas 2022",
-      badge: "Prestasi",
-      color: "bg-gradient-to-r from-purple-500 to-pink-500",
-      date: "Mei 2022"
-    },
-    {
-      title: "Kolaborasi Industri",
-      description: "Kerja sama dengan 5 perusahaan teknologi terkemuka untuk program magang mahasiswa",
-      badge: "Kemitraan",
-      color: "bg-gradient-to-r from-green-500 to-teal-500",
-      date: "Agustus 2022"
-    },
-    {
-      title: "Penghargaan Inovasi",
-      description: "Penghargaan dari Kemenristekdikti untuk solusi teknologi inovatif",
-      badge: "Penghargaan",
-      color: "bg-gradient-to-r from-amber-500 to-orange-500",
-      date: "November 2022"
-    }
-  ];
+  const [stats, setStats] = useState<Array<{
+    value: number;
+    title: string;
+    icon: string;
+  }>>([]);
+  const [achievements, setAchievements] = useState<Array<{
+    title: string;
+    description: string;
+    badge: string;
+    color: string;
+    date: string;
+  }>>([]);
+
+  // Fetch achievements and stats data from site config
+  useEffect(() => {
+    fetch('/api/site-config')
+      .then(res => res.json())
+      .then(data => {
+        // Handle stats data
+        if (data.stats && Array.isArray(data.stats)) {
+          setStats(data.stats);
+        } else {
+          // Fallback to default data if not available in config
+          setStats([
+            {
+              value: 250,
+              title: "Anggota",
+              icon: '<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" /></svg>'
+            },
+            {
+              value: 45,
+              title: "Kegiatan",
+              icon: '<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" /></svg>'
+            },
+            {
+              value: 12,
+              title: "Penghargaan",
+              icon: '<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>'
+            },
+            {
+              value: 3,
+              title: "Tahun",
+              icon: '<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" /></svg>'
+            }
+          ]);
+        }
+
+        // Handle achievements data
+        if (data.achievements && Array.isArray(data.achievements)) {
+          setAchievements(data.achievements);
+        } else {
+          // Fallback to default data if not available in config
+          setAchievements([
+            {
+              title: "Kompetisi Nasional",
+              description: "Juara 1 dalam Kompetisi Pemrograman Nasional antar Universitas 2022",
+              badge: "Prestasi",
+              color: "bg-gradient-to-r from-purple-500 to-pink-500",
+              date: "Mei 2022"
+            },
+            {
+              title: "Kolaborasi Industri",
+              description: "Kerja sama dengan 5 perusahaan teknologi terkemuka untuk program magang mahasiswa",
+              badge: "Kemitraan",
+              color: "bg-gradient-to-r from-green-500 to-teal-500",
+              date: "Agustus 2022"
+            },
+            {
+              title: "Penghargaan Inovasi",
+              description: "Penghargaan dari Kemenristekdikti untuk solusi teknologi inovatif",
+              badge: "Penghargaan",
+              color: "bg-gradient-to-r from-amber-500 to-orange-500",
+              date: "November 2022"
+            }
+          ]);
+        }
+      })
+      .catch(error => {
+        console.error('Failed to fetch achievements data:', error);
+        // Use default data on error
+        setStats([
+          {
+            value: 250,
+            title: "Anggota",
+            icon: '<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" /></svg>'
+          },
+          {
+            value: 45,
+            title: "Kegiatan",
+            icon: '<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" /></svg>'
+          },
+          {
+            value: 12,
+            title: "Penghargaan",
+            icon: '<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>'
+          },
+          {
+            value: 3,
+            title: "Tahun",
+            icon: '<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" /></svg>'
+          }
+        ]);
+        setAchievements([
+          {
+            title: "Kompetisi Nasional",
+            description: "Juara 1 dalam Kompetisi Pemrograman Nasional antar Universitas 2022",
+            badge: "Prestasi",
+            color: "bg-gradient-to-r from-purple-500 to-pink-500",
+            date: "Mei 2022"
+          },
+          {
+            title: "Kolaborasi Industri",
+            description: "Kerja sama dengan 5 perusahaan teknologi terkemuka untuk program magang mahasiswa",
+            badge: "Kemitraan",
+            color: "bg-gradient-to-r from-green-500 to-teal-500",
+            date: "Agustus 2022"
+          },
+          {
+            title: "Penghargaan Inovasi",
+            description: "Penghargaan dari Kemenristekdikti untuk solusi teknologi inovatif",
+            badge: "Penghargaan",
+            color: "bg-gradient-to-r from-amber-500 to-orange-500",
+            date: "November 2022"
+          }
+        ]);
+      });
+  }, []);
   
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -189,7 +253,13 @@ const AchievementsSection = () => {
               variants={itemVariants}
               className="text-center"
             >
-              <AnimatedCounter value={stat.value} title={stat.title} icon={stat.icon} />
+              <AnimatedCounter 
+                value={typeof stat.value === 'string' ? parseInt(stat.value, 10) || 0 : stat.value} 
+                title={stat.title} 
+                icon={
+                  <div dangerouslySetInnerHTML={{ __html: stat.icon }} />
+                } 
+              />
             </motion.div>
           ))}
         </motion.div>
