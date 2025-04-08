@@ -6,7 +6,7 @@
   "locale": "id-ID",
   "type": "website",
   "logo": "https://hmtipemuda.site/logo.png",
-  "foundingDate": "2020-02-02",
+  "foundingDate": "2023-02-10",
   "organizationType": "EducationalOrganization",
   "keywords": [
     "HMTI",
@@ -111,19 +111,19 @@
       "imagePath": "/images/anggota/ahmad-fauzi.jpg"
     },
     {
-      "name": "Dina Aulia",
+      "name": "Galih Min Fadlil",
       "position": "Wakil Ketua",
       "department": "Kepemimpinan",
       "imagePath": "/images/anggota/dina-aulia.jpg"
     },
     {
-      "name": "Rizky Pratama",
+      "name": "Khalisa Salsabilah",
       "position": "Sekretaris",
       "department": "Kesekretariatan",
       "imagePath": "/images/anggota/rizky-pratama.jpg"
     },
     {
-      "name": "Indah Permata",
+      "name": "Aisyah Shinta Balqis",
       "position": "Bendahara",
       "department": "Keuangan",
       "imagePath": "/images/anggota/indah-permata.jpg"
@@ -131,7 +131,7 @@
   ],
   "stats": [
     {
-      "value": 29,
+      "value": 30,
       "title": "Anggota",
       "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-8 w-8\" viewBox=\"0 0 20 20\" fill=\"currentColor\"><path d=\"M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z\" /></svg>"
     },
@@ -151,5 +151,39 @@
       "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-8 w-8\" viewBox=\"0 0 20 20\" fill=\"currentColor\"><path fillRule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z\" clipRule=\"evenodd\" /></svg>"
     }
   ],
-  "achievements": []
+  "achievements": [],
+  "programs": [
+    {
+      "title": "Sosialisasi",
+      "description": "Kegiatan pengenalan HMTI kepada mahasiswa baru dan penyebaran informasi program kerja kepada seluruh anggota.",
+      "icon": "/icons/sosialisasi.svg",
+      "image": "/images/program1.jpg",
+      "color": "from-blue-600 to-cyan-500",
+      "bgColor": "bg-blue-50"
+    },
+    {
+      "title": "MUBES",
+      "description": "Musyawarah Besar sebagai forum tertinggi dalam pengambilan keputusan strategis dan pemilihan pengurus HMTI.",
+      "icon": "/icons/mubes.svg",
+      "image": "/images/program2.jpg",
+      "color": "from-indigo-600 to-blue-500",
+      "bgColor": "bg-indigo-50"
+    },
+    {
+      "title": "LDK",
+      "description": "Latihan Dasar Kepemimpinan untuk mengembangkan jiwa kepemimpinan, manajemen organisasi, dan soft skill anggota.",
+      "icon": "/icons/ldk.svg",
+      "image": "/images/program3.jpg",
+      "color": "from-cyan-500 to-teal-500",
+      "bgColor": "bg-cyan-50"
+    },
+    {
+      "title": "RAKER",
+      "description": "Rapat Kerja pengurus untuk merumuskan program kerja, evaluasi kegiatan, dan menyusun strategi organisasi.",
+      "icon": "/icons/raker.svg",
+      "image": "/images/program4.jpg",
+      "color": "from-teal-500 to-green-500",
+      "bgColor": "bg-teal-50"
+    }
+  ]
 }

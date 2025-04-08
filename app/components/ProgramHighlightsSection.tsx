@@ -1,16 +1,35 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useInView } from "framer-motion";
 import Image from "next/image";
+
+interface ProgramItem {
+  title: string;
+  description: string;
+  icon: string;
+  image: string;
+  color: string;
+  bgColor: string;
+}
 
 const ProgramHighlightsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
   const [failedImages] = useState<{[key: string]: boolean}>({});
+  const [programs, setPrograms] = useState<ProgramItem[]>([]);
+  const [loading, setLoading] = useState(true);
   
-  const programs = [
+  useEffect(() => {
+    fetch('/api/site-config')
+      .then(res => res.json())
+      .then(data => {
+        if (data.programs && Array.isArray(data.programs)) {
+          setPrograms(data.programs);
+        } else {
+          // Fallback to default programs if none are configured
+          setPrograms([
     {
       title: "Sosialisasi",
       description: "Kegiatan pengenalan HMTI kepada mahasiswa baru dan penyebaran informasi program kerja kepada seluruh anggota.",
@@ -43,7 +62,29 @@ const ProgramHighlightsSection = () => {
       color: "from-teal-500 to-green-500",
       bgColor: "bg-teal-50"
     }
-  ];
+          ]);
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to load program data:', err);
+        // Fallback to empty array if fetch fails
+        setPrograms([]);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <section ref={ref} id="programs" className="py-28 bg-white relative">
+        <div className="container mx-auto px-4 md:px-8 relative z-10">
+          <div className="flex items-center justify-center min-h-[300px]">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section ref={ref} id="programs" className="py-28 bg-white relative">

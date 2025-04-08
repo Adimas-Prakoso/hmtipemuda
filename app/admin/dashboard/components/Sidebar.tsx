@@ -30,7 +30,7 @@ const navItems: NavItem[] = [
   {
     icon: BsCalendarEvent,
     label: "Events",
-    href: "/admin/events",
+    href: "/admin/dashboard/events",
   },
   {
     icon: FiUsers,

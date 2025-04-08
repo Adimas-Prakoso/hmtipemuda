@@ -74,6 +74,15 @@ interface AchievementItem {
   date: string;
 }
 
+interface ProgramItem {
+  title: string;
+  description: string;
+  icon: string;
+  image: string;
+  color: string;
+  bgColor: string;
+}
+
 interface SiteConfig {
   title: string;
   description: string;
@@ -105,6 +114,7 @@ interface SiteConfig {
   leadershipTeam: LeadershipMember[];
   stats: StatItem[];
   achievements: AchievementItem[];
+  programs: ProgramItem[];
 }
 
 export default function SiteConfigPage() {
@@ -138,7 +148,8 @@ export default function SiteConfigPage() {
           ...stat,
           value: typeof stat.value === 'string' ? parseInt(stat.value, 10) || 0 : stat.value
         })) : [],
-        achievements: Array.isArray(config.achievements) ? config.achievements : []
+        achievements: Array.isArray(config.achievements) ? config.achievements : [],
+        programs: Array.isArray(config.programs) ? config.programs : []
       };
 
       console.log('Submitting config data:', preparedConfig);
@@ -198,6 +209,7 @@ export default function SiteConfigPage() {
         <TabButton name="social" label="Social Media" />
         <TabButton name="organization" label="Organization" />
         <TabButton name="hero" label="Hero Slides" />
+        <TabButton name="programs" label="Program Highlights" />
         <TabButton name="leadership" label="Leadership Team" />
         <TabButton name="achievements" label="Achievements" />
       </div>
@@ -461,6 +473,270 @@ export default function SiteConfigPage() {
                     />
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'programs' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-semibold text-blue-900 dark:text-white">Program Highlights</h2>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  {config.programs?.length || 0} program{(config.programs?.length || 0) !== 1 ? 's' : ''}
+                </div>
+              </div>
+              
+              <p className="text-gray-600 dark:text-gray-300">
+                Program highlights are featured on the homepage and showcase the main activities of the organization.
+                Each program can have a custom icon, image, and color scheme.
+              </p>
+              
+              <div className="space-y-6">
+                {config.programs && config.programs.map((program, index) => (
+                  <div key={index} className="p-5 border rounded-xl shadow-sm dark:border-gray-700 transition-all hover:shadow-md">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className={`flex items-center justify-center w-10 h-10 rounded-full ${program.bgColor || 'bg-blue-50'}`}>
+                          {program.icon ? (
+                            <img src={program.icon} alt="" className="w-5 h-5" />
+                          ) : (
+                            <div className="w-5 h-5 bg-gray-300 rounded-full animate-pulse"></div>
+                          )}
+                        </div>
+                        <h3 className="font-medium text-lg text-gray-900 dark:text-white">
+                          {program.title || `Program ${index + 1}`}
+                        </h3>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            // Move program up
+                            if (index > 0) {
+                              const newPrograms = [...config.programs];
+                              [newPrograms[index], newPrograms[index - 1]] = [newPrograms[index - 1], newPrograms[index]];
+                              setConfig({ ...config, programs: newPrograms });
+                            }
+                          }}
+                          disabled={index === 0}
+                          className={`p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 ${index === 0 ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed' : 'text-gray-600 dark:text-gray-300'}`}
+                          title="Move up"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            // Move program down
+                            if (index < config.programs.length - 1) {
+                              const newPrograms = [...config.programs];
+                              [newPrograms[index], newPrograms[index + 1]] = [newPrograms[index + 1], newPrograms[index]];
+                              setConfig({ ...config, programs: newPrograms });
+                            }
+                          }}
+                          disabled={index === config.programs.length - 1}
+                          className={`p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 ${index === config.programs.length - 1 ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed' : 'text-gray-600 dark:text-gray-300'}`}
+                          title="Move down"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newPrograms = config.programs.filter((_, i) => i !== index);
+                            setConfig({ ...config, programs: newPrograms });
+                          }}
+                          className="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20"
+                          title="Delete program"
+                        >
+                          <FiTrash className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Title</label>
+                          <input
+                            type="text"
+                            value={program.title}
+                            onChange={(e) => {
+                              const newPrograms = [...config.programs];
+                              newPrograms[index] = { ...program, title: e.target.value };
+                              setConfig({ ...config, programs: newPrograms });
+                            }}
+                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            placeholder="e.g., MUBES, Sosialisasi, LDK"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Description</label>
+                          <textarea
+                            value={program.description}
+                            onChange={(e) => {
+                              const newPrograms = [...config.programs];
+                              newPrograms[index] = { ...program, description: e.target.value };
+                              setConfig({ ...config, programs: newPrograms });
+                            }}
+                            rows={3}
+                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            placeholder="Brief description of the program"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Icon Path</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={program.icon}
+                              onChange={(e) => {
+                                const newPrograms = [...config.programs];
+                                newPrograms[index] = { ...program, icon: e.target.value };
+                                setConfig({ ...config, programs: newPrograms });
+                              }}
+                              className="flex-1 p-2 border rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                              placeholder="/icons/program.svg"
+                            />
+                            {program.icon && (
+                              <div className="flex-shrink-0 w-10 h-10 border rounded flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+                                <img src={program.icon} alt="" className="w-5 h-5" onError={(e) => {
+                                  e.currentTarget.src = '/icons/error.svg';
+                                }} />
+                              </div>
+                            )}
+                          </div>
+                          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Path to SVG icon (e.g., /icons/program.svg)</p>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Image Path</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={program.image}
+                              onChange={(e) => {
+                                const newPrograms = [...config.programs];
+                                newPrograms[index] = { ...program, image: e.target.value };
+                                setConfig({ ...config, programs: newPrograms });
+                              }}
+                              className="flex-1 p-2 border rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                              placeholder="/images/program1.jpg"
+                            />
+                            {program.image && (
+                              <div className="flex-shrink-0 w-10 h-10 border rounded overflow-hidden">
+                                <img src={program.image} alt="" className="w-full h-full object-cover" onError={(e) => {
+                                  e.currentTarget.src = '/images/program-placeholder.jpg';
+                                }} />
+                              </div>
+                            )}
+                          </div>
+                          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Path to background image (e.g., /images/program1.jpg)</p>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Gradient Color</label>
+                            <input
+                              type="text"
+                              value={program.color}
+                              onChange={(e) => {
+                                const newPrograms = [...config.programs];
+                                newPrograms[index] = { ...program, color: e.target.value };
+                                setConfig({ ...config, programs: newPrograms });
+                              }}
+                              placeholder="from-blue-600 to-cyan-500"
+                              className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            />
+                            {program.color && (
+                              <div className={`mt-2 h-2 w-full rounded-full bg-gradient-to-r ${program.color}`}></div>
+                            )}
+                          </div>
+                          
+                          <div>
+                            <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Background Color</label>
+                            <input
+                              type="text"
+                              value={program.bgColor}
+                              onChange={(e) => {
+                                const newPrograms = [...config.programs];
+                                newPrograms[index] = { ...program, bgColor: e.target.value };
+                                setConfig({ ...config, programs: newPrograms });
+                              }}
+                              placeholder="bg-blue-50"
+                              className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            />
+                            {program.bgColor && (
+                              <div className={`mt-2 h-6 w-full rounded ${program.bgColor}`}></div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Preview */}
+                    <div className="mt-6 pt-4 border-t dark:border-gray-700">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Preview</h4>
+                      </div>
+                      <div className={`${program.bgColor || 'bg-blue-50'} rounded-lg p-4 flex items-center gap-4 max-w-md`}>
+                        <div className="relative h-16 w-16 overflow-hidden rounded-lg shadow-md flex-shrink-0">
+                          <div className={`absolute inset-0 bg-gradient-to-br ${program.color || 'from-blue-600 to-cyan-500'}`} style={{ mixBlendMode: 'multiply' }} />
+                          {program.image ? (
+                            <img src={program.image} alt="" className="h-full w-full object-cover" onError={(e) => {
+                              e.currentTarget.src = '/images/program-placeholder.jpg';
+                            }} />
+                          ) : (
+                            <div className="h-full w-full bg-gray-300 animate-pulse"></div>
+                          )}
+                          {program.icon && (
+                            <div className="absolute top-1 right-1 bg-white/90 rounded-full p-1 shadow-sm">
+                              <img src={program.icon} alt="" className="w-3 h-3" onError={(e) => {
+                                e.currentTarget.src = '/icons/error.svg';
+                              }} />
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900">{program.title || 'Program Title'}</h3>
+                          <p className="text-sm text-gray-700 line-clamp-2">{program.description || 'Program description will appear here.'}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newPrograms = config.programs || [];
+                    setConfig({
+                      ...config,
+                      programs: [...newPrograms, { 
+                        title: '', 
+                        description: '', 
+                        icon: '/icons/program.svg',
+                        image: '/images/program-placeholder.jpg',
+                        color: 'from-blue-600 to-cyan-500',
+                        bgColor: 'bg-blue-50'
+                      }]
+                    });
+                  }}
+                  className="w-full p-3 border-2 border-dashed rounded-lg hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800 dark:text-white transition-colors"
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <FiPlus className="h-5 w-5" />
+                    <span>Add New Program</span>
+                  </div>
+                </button>
               </div>
             </div>
           )}

@@ -40,22 +40,22 @@ const Navbar = () => {
               Beranda
             </Link>
             <Link 
-              href="/about" 
+              href="/events" 
               className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-blue-700 transition-colors duration-200"
             >
-              Tentang
+              Events
             </Link>
             <Link 
-              href="/program" 
+              href="/news" 
               className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-blue-700 transition-colors duration-200"
             >
-              Program
+              News
             </Link>
             <Link 
-              href="/contact" 
+              href="/library" 
               className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-blue-700 transition-colors duration-200"
             >
-              Kontak
+              Library
             </Link>
             <div className="h-6 w-px bg-gray-200"></div>
             <Link

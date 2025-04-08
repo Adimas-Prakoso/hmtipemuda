@@ -25,6 +25,14 @@ const WhatsAppPage = dynamic(() => import('../whatsapp/page'), {
   ),
 });
 
+const EventsPage = dynamic(() => import('../events/page'), {
+  loading: () => (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"></div>
+    </div>
+  ),
+});
+
 interface SystemData {
   cpu: {
     model: string;
@@ -315,14 +323,7 @@ const DashboardContent = ({ systemData, visitorData, isDarkMode }: DashboardCont
   );
 };
 
-const EventsContent = () => (
-  <div className="rounded-xl bg-white p-6 shadow-sm dark:bg-gray-800">
-    <h3 className="text-lg font-semibold text-blue-900 dark:text-white mb-4">
-      Events
-    </h3>
-    <p className="text-gray-600 dark:text-gray-300">Events content will be added here</p>
-  </div>
-);
+const EventsContent = () => <EventsPage />;
 
 const UsersContent = () => (
   <div className="rounded-xl bg-white p-6 shadow-sm dark:bg-gray-800">

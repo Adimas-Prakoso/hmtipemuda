@@ -1,14 +1,14 @@
 [
   {
-    "nama": "Ahmad Fauzi",
-    "email": "ahmad.fauzi@student.univ.ac.id",
-    "nomor_telfon": "082156789012",
-    "foto_profile": "/anggota/ahmad_fauzi.jpg",
-    "jabatan": "Ketua Divisi Humas",
-    "asal_kampus": "Universitas Teknologi Indonesia",
-    "NIM": "190623045",
+    "nama": "Adimas Prakoso",
+    "email": "adimas.prakoso2@gmail.com",
+    "nomor_telfon": "081291410009",
+    "foto_profile": "/anggota/adimas_prakoso.jpg",
+    "jabatan": "Ketua Divisi Litbang",
+    "asal_kampus": "UBSI Pemuda",
+    "NIM": "17230448",
     "jenis_kelamin": "Laki-laki",
-    "semester": 5,
+    "semester": 4,
     "password": "$2a$10$xJwz5DyVf7QN8x3vI3RKzeOpA1KIy3TjgGFueMK8JpnMo2ABIwKyS",
     "nilai": {
       "sikap": 90,

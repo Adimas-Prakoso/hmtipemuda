@@ -29,6 +29,15 @@ const achievementItemSchema = z.object({
   date: z.string()
 });
 
+const programItemSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  icon: z.string(),
+  image: z.string(),
+  color: z.string(),
+  bgColor: z.string()
+});
+
 const configSchema = z.object({
   title: z.string(),
   description: z.string(),
@@ -105,7 +114,8 @@ const configSchema = z.object({
   slides: z.array(slideSchema),
   leadershipTeam: z.array(leadershipMemberSchema).optional().default([]),
   stats: z.array(statItemSchema).optional().default([]),
-  achievements: z.array(achievementItemSchema).optional().default([])
+  achievements: z.array(achievementItemSchema).optional().default([]),
+  programs: z.array(programItemSchema).optional().default([])
 });
 
 const CONFIG_PATH = path.join(process.cwd(), 'data', 'site_config.json');
@@ -133,8 +143,9 @@ export async function POST(request: NextRequest) {
     // Log the current structure of specific fields for debugging
     console.log('Stats field type:', typeof data.stats, 'isArray:', Array.isArray(data.stats));
     console.log('Achievements field type:', typeof data.achievements, 'isArray:', Array.isArray(data.achievements));
+    console.log('Programs field type:', typeof data.programs, 'isArray:', Array.isArray(data.programs));
     
-    // Ensure stats and achievements arrays exist and have the right format
+    // Ensure arrays exist and have the right format
     if (!data.stats) {
       console.log('Stats field missing, initializing empty array');
       data.stats = [];
@@ -142,6 +153,10 @@ export async function POST(request: NextRequest) {
     if (!data.achievements) {
       console.log('Achievements field missing, initializing empty array');
       data.achievements = [];
+    }
+    if (!data.programs) {
+      console.log('Programs field missing, initializing empty array');
+      data.programs = [];
     }
     
     // Convert any string values in stats to numbers if needed
