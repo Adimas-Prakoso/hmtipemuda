@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -8,8 +8,8 @@ import Link from "next/link";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-// Import event data
-import { EventType, events as allEventsData } from "../../data/events";
+// Import event type
+import { EventType } from "../../data/types";
 
 // EventCard component (similar to the one in UpcomingEventsSection)
 const EventCard = ({ event }: { event: EventType }) => (
@@ -57,7 +57,7 @@ const EventCard = ({ event }: { event: EventType }) => (
             href={event.registrationLink}
             className="inline-flex items-center gap-1 text-xs sm:text-sm font-medium text-blue-700 hover:text-blue-800 group transition-all duration-300"
           >
-            Daftar Sekarang
+            Lihat Detail
             <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
@@ -69,9 +69,33 @@ const EventCard = ({ event }: { event: EventType }) => (
 );
 
 export default function EventsPage() {
-  // Get events data from our data file
-  const allEvents = allEventsData;
-
+  // State for events data
+  const [allEvents, setAllEvents] = useState<EventType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Fetch events from API
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const response = await fetch('/api/events');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch events');
+        }
+        
+        const data = await response.json();
+        setAllEvents(data.events || []);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching events:', err);
+        setError('Failed to load events. Please try again later.');
+        setLoading(false);
+      }
+    }
+    
+    fetchEvents();
+  }, []);
 
   // Sort events by date (upcoming first)
   const sortedEvents = [...allEvents].sort((a, b) => 
@@ -141,7 +165,25 @@ export default function EventsPage() {
             </div>
             
             {/* Events Grid */}
-            {filteredEvents.length > 0 ? (
+            {loading ? (
+              <div className="text-center py-8 sm:py-12">
+                <div className="animate-pulse flex flex-col items-center">
+                  <div className="h-12 w-12 sm:h-16 sm:w-16 bg-gray-200 rounded-full mb-4"></div>
+                  <div className="h-4 w-48 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-3 w-32 bg-gray-200 rounded"></div>
+                </div>
+              </div>
+            ) : error ? (
+              <div className="text-center py-8 sm:py-12">
+                <div className="mb-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 sm:h-16 sm:w-16 mx-auto text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-700 mb-2">Error</h3>
+                <p className="text-sm sm:text-base text-gray-500">{error}</p>
+              </div>
+            ) : filteredEvents.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {filteredEvents.map((event) => (
                   <EventCard key={event.id} event={event} />

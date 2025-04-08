@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { DetailedEventType, EventType, SpeakerType, AgendaItemType, FAQType, ContactPersonType } from "../../../../data/events";
+import { DetailedEventType, EventType, SpeakerType, AgendaItemType, FAQType } from "../../../../data/types";
 
 interface DetailedEventFormProps {
   event: EventType;

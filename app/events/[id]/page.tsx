@@ -6,9 +6,70 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
+// Countdown timer component
+const CountdownTimer = ({ targetDate }: { targetDate: Date }) => {
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
+  
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const difference = targetDate.getTime() - new Date().getTime();
+      
+      if (difference <= 0) {
+        return {
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0
+        };
+      }
+      
+      return {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60)
+      };
+    };
+    
+    setTimeLeft(calculateTimeLeft());
+    
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, [targetDate]);
+  
+  return (
+    <div className="flex justify-center gap-2 sm:gap-3 text-center">
+      <div className="bg-white rounded-lg shadow-sm px-2 py-1 sm:px-3 sm:py-2 min-w-[40px] sm:min-w-[50px]">
+        <div className="font-bold text-lg sm:text-xl text-blue-600">{timeLeft.days}</div>
+        <div className="text-xs text-gray-500">Hari</div>
+      </div>
+      <div className="bg-white rounded-lg shadow-sm px-2 py-1 sm:px-3 sm:py-2 min-w-[40px] sm:min-w-[50px]">
+        <div className="font-bold text-lg sm:text-xl text-blue-600">{timeLeft.hours}</div>
+        <div className="text-xs text-gray-500">Jam</div>
+      </div>
+      <div className="bg-white rounded-lg shadow-sm px-2 py-1 sm:px-3 sm:py-2 min-w-[40px] sm:min-w-[50px]">
+        <div className="font-bold text-lg sm:text-xl text-blue-600">{timeLeft.minutes}</div>
+        <div className="text-xs text-gray-500">Menit</div>
+      </div>
+      <div className="bg-white rounded-lg shadow-sm px-2 py-1 sm:px-3 sm:py-2 min-w-[40px] sm:min-w-[50px]">
+        <div className="font-bold text-lg sm:text-xl text-blue-600">{timeLeft.seconds}</div>
+        <div className="text-xs text-gray-500">Detik</div>
+      </div>
+    </div>
+  );
+};
+
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import { DetailedEventType, getDetailedEventById } from "../../../data/events";
+import { DetailedEventType } from "../../../data/types";
 
 export default function EventDetailPage() {
   const params = useParams();
@@ -19,12 +80,39 @@ export default function EventDetailPage() {
   useEffect(() => {
     if (params.id) {
       const eventId = Array.isArray(params.id) ? params.id[0] : params.id;
-      const eventData = getDetailedEventById(eventId);
       
-      if (eventData) {
-        setEvent(eventData);
+      // Fetch event data from API
+      async function fetchEventData() {
+        try {
+          const response = await fetch('/api/events');
+          
+          if (!response.ok) {
+            throw new Error('Failed to fetch events');
+          }
+          
+          const data = await response.json();
+          
+          // Find the event in the events array
+          const basicEvent = data.events?.find((e: { id: string }) => e.id === eventId);
+          
+          // Get detailed event data
+          const detailedEventData = data.detailedEvents?.[eventId];
+          
+          if (detailedEventData) {
+            setEvent(detailedEventData);
+          } else if (basicEvent) {
+            // If we only have basic event data, use that
+            setEvent(basicEvent);
+          }
+          
+          setLoading(false);
+        } catch (error) {
+          console.error('Error fetching event data:', error);
+          setLoading(false);
+        }
       }
-      setLoading(false);
+      
+      fetchEventData();
     }
   }, [params.id]);
 
@@ -149,6 +237,16 @@ export default function EventDetailPage() {
                   </div>
                 </div>
               </div>
+              
+              {/* Countdown Timer */}
+              {isRegistrationOpen && (
+                <div className="mt-6 bg-blue-800 bg-opacity-30 rounded-lg p-4">
+                  <div className="text-center text-white mb-3">
+                    <div className="text-sm font-medium">Pendaftaran ditutup dalam:</div>
+                  </div>
+                  <CountdownTimer targetDate={registrationDeadlineDate} />
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -206,6 +304,26 @@ export default function EventDetailPage() {
                 <div className="p-6">
                   {activeTab === "overview" && (
                     <div>
+                      {/* Image Gallery */}
+                      {event.images && event.images.length > 0 && (
+                        <div className="mb-8">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {event.images.map((image, index) => (
+                              <div key={index} className="relative rounded-lg overflow-hidden h-64 shadow-md">
+                                <Image
+                                  src={image.startsWith('http') ? image : image.startsWith('/') ? image : `/${image}`}
+                                  alt={`${event.title} - Gambar ${index + 1}`}
+                                  fill
+                                  sizes="(max-width: 768px) 100vw, 50vw"
+                                  className="object-cover"
+                                  priority={index === 0}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
                       <h2 className="text-xl font-bold text-gray-900 mb-4">Deskripsi Event</h2>
                       <p className="text-gray-700 mb-6 whitespace-pre-line">{event.description}</p>
                       

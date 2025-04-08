@@ -6,7 +6,27 @@ const nextConfig: NextConfig = {
     appIsrStatus: false
   },
   // Pindahkan dari experimental.serverComponentsExternalPackages ke serverExternalPackages
-  serverExternalPackages: []
+  serverExternalPackages: [],
+  // Konfigurasi untuk gambar eksternal
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+        port: '',
+        pathname: '/**',
+      }
+    ],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  }
 };
 
 export default nextConfig;
