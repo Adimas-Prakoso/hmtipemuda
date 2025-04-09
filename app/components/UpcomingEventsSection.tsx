@@ -166,7 +166,7 @@ const EventCard = ({ event, isFeature = false }: { event: EventType, isFeature?:
                 href={event.registrationLink || `/events/${event.id}`}
                 className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 w-full md:w-auto"
               >
-                Daftar Sekarang
+                Lihat Detail
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
@@ -260,11 +260,13 @@ const UpcomingEventsSection = () => {
     .filter(event => new Date(event.date) > new Date())
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     
-  // Get the first 3 upcoming events
-  const topThreeEvents = upcomingEvents.slice(0, 3);
-  
   // The first upcoming event for countdown
-  const upcomingEvent = topThreeEvents[0];
+  const upcomingEvent = upcomingEvents[0];
+  
+  // Get the next 3 upcoming events (excluding the first one that's already shown in Event Terdekat)
+  const topThreeEvents = upcomingEvents.length > 1 
+    ? upcomingEvents.slice(1, 4) 
+    : [];
   
   // Featured event (if any)
   const featuredEvent = events.find(event => event.featured);
@@ -298,7 +300,7 @@ const UpcomingEventsSection = () => {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Upcoming Events</h2>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Acara Yang Akan Datang</h2>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Jangan lewatkan berbagai event menarik yang diselenggarakan oleh HMTI untuk mengembangkan skill dan jaringan Anda.
           </p>
@@ -431,7 +433,7 @@ const UpcomingEventsSection = () => {
                     href={upcomingEvent.registrationLink || `/events/${upcomingEvent.id}`}
                     className="inline-flex items-center gap-2 bg-white text-blue-700 hover:bg-blue-50 font-medium py-2 px-4 rounded-lg transition-colors duration-200"
                   >
-                    Daftar Sekarang
+                    Lihat Detail
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
@@ -444,19 +446,6 @@ const UpcomingEventsSection = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
-        )}
-        
-        {/* Section title for upcoming events - only show when there are events and not loading */}
-        {!isLoading && !error && topThreeEvents.length > 0 && (
-          <motion.div 
-            className="mb-8 text-center"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Event Mendatang</h3>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">Jangan lewatkan event-event menarik dari HMTI Pemuda</p>
           </motion.div>
         )}
         
