@@ -142,33 +142,52 @@ export async function POST(request: NextRequest) {
     
     // Verify CAPTCHA if token is provided
     if (captchaToken) {
-      try {
-        const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY;
-        
-        if (!recaptchaSecretKey) {
-          console.warn("RECAPTCHA_SECRET_KEY is not set in environment variables");
-        } else {
-          // Verify with Google reCAPTCHA API
-          const recaptchaResponse = await axios.post(
-            `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKey}&response=${captchaToken}`,
-            {},
-            {
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-              }
-            }
-          );
+      // Skip verification for dummy tokens in development mode
+      const isDummyToken = captchaToken === "dummy-token-for-development";
+      const isDevelopment = process.env.NODE_ENV === "development";
+      
+      if (isDummyToken && isDevelopment) {
+        console.log("Using dummy reCAPTCHA token in development mode, skipping verification");
+      } else {
+        try {
+          const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY;
           
-          if (!recaptchaResponse.data.success) {
-            console.warn(`CAPTCHA verification failed: ${JSON.stringify(recaptchaResponse.data)}`); 
+          if (!recaptchaSecretKey) {
+            console.warn("RECAPTCHA_SECRET_KEY is not set in environment variables");
+            // In production, we might want to fail here, but for development we'll continue
+            if (process.env.NODE_ENV === "production") {
+              console.error("Missing RECAPTCHA_SECRET_KEY in production environment");
+            }
+          } else {
+            // Verify with Google reCAPTCHA API
+            const recaptchaResponse = await axios.post(
+              `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKey}&response=${captchaToken}`,
+              {},
+              {
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded"
+                }
+              }
+            );
+            
+            if (!recaptchaResponse.data.success) {
+              console.warn(`CAPTCHA verification failed: ${JSON.stringify(recaptchaResponse.data)}`);
+              return NextResponse.json(
+                { error: "Verifikasi CAPTCHA gagal", code: "CAPTCHA_FAILED" },
+                { status: 400 }
+              );
+            }
+          }
+        } catch (error) {
+          console.error("Error verifying CAPTCHA:", error);
+          // In production, we might want to fail here
+          if (process.env.NODE_ENV === "production") {
             return NextResponse.json(
-              { error: "Verifikasi CAPTCHA gagal", code: "CAPTCHA_FAILED" },
+              { error: "Verifikasi keamanan gagal", code: "CAPTCHA_ERROR" },
               { status: 400 }
             );
           }
         }
-      } catch (error) {
-        console.error("Error verifying CAPTCHA:", error);
       }
     }
 

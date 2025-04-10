@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { FiPlus, FiTrash } from 'react-icons/fi';
+import Image from 'next/image';
 
 interface Slide {
   image: string;
@@ -498,7 +499,7 @@ export default function SiteConfigPage() {
                       <div className="flex items-center gap-3">
                         <div className={`flex items-center justify-center w-10 h-10 rounded-full ${program.bgColor || 'bg-blue-50'}`}>
                           {program.icon ? (
-                            <img src={program.icon} alt="" className="w-5 h-5" />
+                            <Image src={program.icon} alt="Program icon" width={20} height={20} className="w-5 h-5" />
                           ) : (
                             <div className="w-5 h-5 bg-gray-300 rounded-full animate-pulse"></div>
                           )}
@@ -606,8 +607,9 @@ export default function SiteConfigPage() {
                             />
                             {program.icon && (
                               <div className="flex-shrink-0 w-10 h-10 border rounded flex items-center justify-center bg-gray-50 dark:bg-gray-800">
-                                <img src={program.icon} alt="" className="w-5 h-5" onError={(e) => {
-                                  e.currentTarget.src = '/icons/error.svg';
+                                <Image src={program.icon} alt="Program icon" width={20} height={20} className="w-5 h-5" onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                                  const target = e.currentTarget as HTMLImageElement;
+                                  target.src = '/icons/error.svg';
                                 }} />
                               </div>
                             )}
@@ -633,8 +635,9 @@ export default function SiteConfigPage() {
                             />
                             {program.image && (
                               <div className="flex-shrink-0 w-10 h-10 border rounded overflow-hidden">
-                                <img src={program.image} alt="" className="w-full h-full object-cover" onError={(e) => {
-                                  e.currentTarget.src = '/images/program-placeholder.jpg';
+                                <Image src={program.image} alt="Program image" width={40} height={40} className="w-full h-full object-cover" onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                                  const target = e.currentTarget as HTMLImageElement;
+                                  target.src = '/images/program-placeholder.jpg';
                                 }} />
                               </div>
                             )}
@@ -691,16 +694,18 @@ export default function SiteConfigPage() {
                         <div className="relative h-16 w-16 overflow-hidden rounded-lg shadow-md flex-shrink-0">
                           <div className={`absolute inset-0 bg-gradient-to-br ${program.color || 'from-blue-600 to-cyan-500'}`} style={{ mixBlendMode: 'multiply' }} />
                           {program.image ? (
-                            <img src={program.image} alt="" className="h-full w-full object-cover" onError={(e) => {
-                              e.currentTarget.src = '/images/program-placeholder.jpg';
+                            <Image src={program.image} alt="Program image" width={64} height={64} className="h-full w-full object-cover" onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                              const target = e.currentTarget as HTMLImageElement;
+                              target.src = '/images/program-placeholder.jpg';
                             }} />
                           ) : (
                             <div className="h-full w-full bg-gray-300 animate-pulse"></div>
                           )}
                           {program.icon && (
                             <div className="absolute top-1 right-1 bg-white/90 rounded-full p-1 shadow-sm">
-                              <img src={program.icon} alt="" className="w-3 h-3" onError={(e) => {
-                                e.currentTarget.src = '/icons/error.svg';
+                              <Image src={program.icon} alt="Program icon" width={12} height={12} className="w-3 h-3" onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                                const target = e.currentTarget as HTMLImageElement;
+                                target.src = '/icons/error.svg';
                               }} />
                             </div>
                           )}

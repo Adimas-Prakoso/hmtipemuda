@@ -3,35 +3,19 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement
-} from 'chart.js';
-import zoomPlugin from 'chartjs-plugin-zoom';
-import Sidebar from "./components/Sidebar";
-import TabContent from "./components/TabContent";
+import dynamic from "next/dynamic";
 import { FiMenu, FiChevronsLeft, FiSun, FiMoon } from "react-icons/fi";
 import { BiLogOut } from "react-icons/bi";
-import NetworkStatus from "./components/NetworkStatus";
 
-// Register ChartJS components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-  zoomPlugin
+// Dynamically import components that use browser APIs
+const Sidebar = dynamic(() => import("./components/Sidebar"), { ssr: false });
+const TabContent = dynamic(() => import("./components/TabContent"), { ssr: false });
+const NetworkStatus = dynamic(() => import("./components/NetworkStatus"), { ssr: false });
+
+// We'll use a dynamic import for ChartJS initialization
+const ChartJSInitializer = dynamic(
+  () => import('./components/ChartJSInitializer'),
+  { ssr: false }
 );
 
 const CurrentTime = () => {
@@ -105,30 +89,13 @@ interface VisitorStats {
 }
 
 export default function AdminDashboard() {
+  // Render the ChartJSInitializer to initialize Chart.js on the client side
   const router = useRouter();
   const [adminData, setAdminData] = useState({ id: '', nama: '', role: '' });
   const [isExpanded, setIsExpanded] = useState(false);
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState(() => {
-    if (typeof window !== 'undefined') {
-      // Check if there's a selected tab in localStorage (for redirects from WhatsApp page)
-      const selectedTab = localStorage.getItem('selectedTab');
-      if (selectedTab) {
-        // Clear the selected tab from localStorage after using it
-        localStorage.removeItem('selectedTab');
-        return selectedTab;
-      }
-      return 'dashboard';
-    }
-    return 'dashboard';
-  });
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedMode = localStorage.getItem('darkMode');
-      return savedMode ? JSON.parse(savedMode) : false;
-    }
-    return false;
-  });
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [systemData, setSystemData] = useState<SystemData | null>(null);
   const [visitorData, setVisitorData] = useState<VisitorStats | null>(null);
 
@@ -160,6 +127,22 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
+    // Initialize activeTab from localStorage if available
+    if (typeof window !== 'undefined') {
+      const selectedTab = localStorage.getItem('selectedTab');
+      if (selectedTab) {
+        // Clear the selected tab from localStorage after using it
+        localStorage.removeItem('selectedTab');
+        setActiveTab(selectedTab);
+      }
+      
+      // Initialize dark mode from localStorage if available
+      const savedMode = localStorage.getItem('darkMode');
+      if (savedMode) {
+        setIsDarkMode(JSON.parse(savedMode));
+      }
+    }
+    
     const fetchAdminData = async () => {
       try {
         const res = await fetch('/api/auth', { cache: 'no-store' });
@@ -188,7 +171,8 @@ export default function AdminDashboard() {
 
     const fetchVisitorData = async () => {
       try {
-        const res = await fetch('/api/visitors?apikey=frUio9eKhk1UOSnsjhi7');
+        // Use the APIKEY from .env file that you just created
+        const res = await fetch('/api/visitors?apikey=JHvbsBssuxhKbshjJH');
         if (!res.ok) throw new Error('Failed to fetch visitor data');
         const data = await res.json();
         if (data.success) {
@@ -243,6 +227,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="flex h-screen overflow-hidden">
+      <ChartJSInitializer />
       <div className="fixed h-full">
         <Sidebar
           isExpanded={isExpanded}

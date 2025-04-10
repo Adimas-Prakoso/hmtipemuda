@@ -2308,4 +2308,8 @@ const EventsAdmin = ({ onUpdateEvents }: EventsAdminProps) => {
   );
 };
 
-export default EventsAdmin;
+const EventsPage = () => {
+  return <EventsAdmin />;
+};
+
+export default EventsPage;
