@@ -167,11 +167,8 @@ const LoginForm = () => {
     }
     
     // Check if memory game verification is completed
-    // Skip this check in development mode or if we're using a dummy reCAPTCHA key
-    const isDevelopment = process.env.NODE_ENV === 'development';
-    const isUsingDummyKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY === '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' || !process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-    
-    if (!memoryGameVerified && !isDevelopment && !isUsingDummyKey) {
+    // This check is now mandatory in all environments
+    if (!memoryGameVerified) {
       setError("Silakan selesaikan verifikasi anda bukan robot terlebih dahulu");
       return;
     }
@@ -526,8 +523,8 @@ const LoginForm = () => {
             <div>
               <button
                 type="submit"
-                disabled={loading || (!!lockoutUntil && lockoutUntil > Date.now())}
-                className={`group relative w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ${(loading || (lockoutUntil && lockoutUntil > Date.now())) ? 'opacity-70 cursor-not-allowed' : ''}`}
+                disabled={loading || (!!lockoutUntil && lockoutUntil > Date.now()) || !memoryGameVerified}
+                className={`group relative w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ${(loading || (lockoutUntil && lockoutUntil > Date.now()) || !memoryGameVerified) ? 'opacity-70 cursor-not-allowed' : ''}`}
               >
                 {loading ? (
                   <>
@@ -539,6 +536,8 @@ const LoginForm = () => {
                   </>
                 ) : !!lockoutUntil && lockoutUntil > Date.now() ? (
                   <>Akun Terkunci</>
+                ) : !memoryGameVerified ? (
+                  <>Verifikasi Diperlukan</>
                 ) : (
                   <>
                     <FaShieldAlt className="mr-2 h-4 w-4" />
