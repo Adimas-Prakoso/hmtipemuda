@@ -11,6 +11,12 @@ export interface EventType {
   category: string;
 }
 
+export interface PaymentInfoType {
+  bankName: string;
+  accountNumber: string;
+  accountHolderName: string;
+}
+
 export interface DetailedEventType extends EventType {
   organizer: string;
   speakers: SpeakerType[];
@@ -22,6 +28,7 @@ export interface DetailedEventType extends EventType {
   price: number | 'Gratis';
   benefits: string[];
   contactPerson: ContactPersonType;
+  paymentInfo?: PaymentInfoType;
   faqs: FAQType[];
   images?: string[];
 }

@@ -9,7 +9,7 @@ interface EventsAdminProps {
 }
 
 // Function to save events to events.json via API
-const saveEventsToJson = async (events: EventType[], detailedEvents: Record<string, DetailedEventType>) => {
+const saveEventsToJson = async (events: EventType[], detailedEvents: Record<string, DetailedEventType>): Promise<boolean> => {
   try {
     const response = await fetch('/api/events', {
       method: 'POST',
@@ -21,9 +21,12 @@ const saveEventsToJson = async (events: EventType[], detailedEvents: Record<stri
     
     if (!response.ok) {
       console.error('Failed to save events to JSON file');
+      return false;
     }
+    return true;
   } catch (error) {
     console.error('Error saving events:', error);
+    return false;
   }
 };
 
@@ -44,6 +47,7 @@ const EventsAdmin = ({ onUpdateEvents }: EventsAdminProps) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [detailedEvents, setDetailedEvents] = useState<Record<string, DetailedEventType>>({});
+  const [isSaving, setIsSaving] = useState(false);
   const [newDetailedEvent, setNewDetailedEvent] = useState<Partial<DetailedEventType>>({    
     organizer: "",
     speakers: [],
@@ -59,6 +63,11 @@ const EventsAdmin = ({ onUpdateEvents }: EventsAdminProps) => {
       phone: "",
       email: "",
       whatsapp: ""
+    },
+    paymentInfo: {
+      bankName: "",
+      accountNumber: "",
+      accountHolderName: ""
     },
     faqs: [],
     images: []
@@ -101,21 +110,29 @@ const EventsAdmin = ({ onUpdateEvents }: EventsAdminProps) => {
       localStorage.setItem("hmtiEvents", JSON.stringify(events));
       
       // Save to events.json via API
-      saveEventsToJson(events, detailedEvents);
+      const saveData = async () => {
+        setIsSaving(true);
+        const success = await saveEventsToJson(events, detailedEvents);
+        setIsSaving(false);
+        
+        if (success) {
+          // Only show success message if not already showing one
+          if (!successMessage) {
+            setSuccessMessage("Data berhasil disimpan!");
+            setTimeout(() => setSuccessMessage(""), 3000);
+          }
+        } else if (!errorMessage) {
+          setErrorMessage("Gagal menyimpan data ke server. Silakan coba lagi.");
+          setTimeout(() => setErrorMessage(""), 3000);
+        }
+      };
+      
+      saveData();
     }
   }, [events, onUpdateEvents, detailedEvents]);
   
-  useEffect(() => {
-    // Save detailed events to localStorage
-    if (Object.keys(detailedEvents).length > 0) {
-      localStorage.setItem("hmtiDetailedEvents", JSON.stringify(detailedEvents));
-      
-      // Save to events.json via API if events exist
-      if (events.length > 0) {
-        saveEventsToJson(events, detailedEvents);
-      }
-    }
-  }, [detailedEvents, events]);
+  // Remove the second useEffect that was causing duplicate saves
+  // The events and detailedEvents are now saved together in a single operation
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -227,6 +244,11 @@ const EventsAdmin = ({ onUpdateEvents }: EventsAdminProps) => {
           email: "",
           whatsapp: ""
         },
+        paymentInfo: newDetailedEvent.paymentInfo || {
+          bankName: "",
+          accountNumber: "",
+          accountHolderName: ""
+        },
         faqs: newDetailedEvent.faqs || [],
         images: newDetailedEvent.images || []
       };
@@ -266,6 +288,11 @@ const EventsAdmin = ({ onUpdateEvents }: EventsAdminProps) => {
         phone: "",
         email: "",
         whatsapp: ""
+      },
+      paymentInfo: {
+        bankName: "",
+        accountNumber: "",
+        accountHolderName: ""
       },
       faqs: [],
       images: []
@@ -317,17 +344,9 @@ const EventsAdmin = ({ onUpdateEvents }: EventsAdminProps) => {
 
   const handleDeleteEvent = async (id: string) => {
     if (window.confirm("Apakah Anda yakin ingin menghapus event ini?")) {
-      // Update local state
-      setEvents(prev => prev.filter(event => event.id !== id));
+      setIsSaving(true);
       
-      // Also remove from detailed events if exists
-      if (detailedEvents[id]) {
-        const updatedDetailedEvents = { ...detailedEvents };
-        delete updatedDetailedEvents[id];
-        setDetailedEvents(updatedDetailedEvents);
-      }
-      
-      // Delete from events.json via API
+      // Delete from events.json via API first
       try {
         const response = await fetch('/api/events/delete', {
           method: 'DELETE',
@@ -339,17 +358,30 @@ const EventsAdmin = ({ onUpdateEvents }: EventsAdminProps) => {
         
         if (!response.ok) {
           console.error('Failed to delete event from JSON file');
-          setErrorMessage("Gagal menghapus event dari server. Event dihapus dari tampilan saja.");
+          setErrorMessage("Gagal menghapus event dari server. Silakan coba lagi.");
           setTimeout(() => setErrorMessage(""), 3000);
+          setIsSaving(false);
           return;
+        }
+        
+        // Only update local state after successful API call
+        setEvents(prev => prev.filter(event => event.id !== id));
+        
+        // Also remove from detailed events if exists
+        if (detailedEvents[id]) {
+          const updatedDetailedEvents = { ...detailedEvents };
+          delete updatedDetailedEvents[id];
+          setDetailedEvents(updatedDetailedEvents);
         }
         
         setSuccessMessage("Event berhasil dihapus!");
         setTimeout(() => setSuccessMessage(""), 3000);
       } catch (error) {
         console.error('Error deleting event:', error);
-        setErrorMessage("Terjadi kesalahan saat menghapus event. Event dihapus dari tampilan saja.");
+        setErrorMessage("Terjadi kesalahan saat menghapus event. Silakan coba lagi.");
         setTimeout(() => setErrorMessage(""), 3000);
+      } finally {
+        setIsSaving(false);
       }
     }
   };
@@ -388,6 +420,7 @@ const EventsAdmin = ({ onUpdateEvents }: EventsAdminProps) => {
           <button 
             onClick={() => setIsAdding(true)}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            disabled={isSaving}
           >
             Tambah Event
           </button>
@@ -403,6 +436,16 @@ const EventsAdmin = ({ onUpdateEvents }: EventsAdminProps) => {
       {errorMessage && (
         <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
           {errorMessage}
+        </div>
+      )}
+      
+      {isSaving && (
+        <div className="mb-4 p-3 bg-blue-100 text-blue-700 rounded-lg flex items-center">
+          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Menyimpan perubahan...
         </div>
       )}
 
@@ -773,6 +816,82 @@ const EventsAdmin = ({ onUpdateEvents }: EventsAdminProps) => {
                         }));
                       }
                     }}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Information*/}
+            <div className="mb-6">
+              <h5 className="text-md font-medium mb-3 text-gray-700 dark:text-gray-300">Informasi Pembayaran</h5>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Nama Bank
+                  </label>
+                  <input
+                    type="text"
+                    name="bankName"
+                    value={newDetailedEvent.paymentInfo?.bankName || ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setNewDetailedEvent(prev => ({
+                        ...prev,
+                        paymentInfo: {
+                          bankName: value,
+                          accountNumber: prev.paymentInfo?.accountNumber || "",
+                          accountHolderName: prev.paymentInfo?.accountHolderName || ""
+                        }
+                      }));
+                    }}
+                    placeholder="Contoh: BCA, Mandiri, BNI"
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Nomor Rekening
+                  </label>
+                  <input
+                    type="text"
+                    name="accountNumber"
+                    value={newDetailedEvent.paymentInfo?.accountNumber || ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setNewDetailedEvent(prev => ({
+                        ...prev,
+                        paymentInfo: {
+                          bankName: prev.paymentInfo?.bankName || "",
+                          accountNumber: value,
+                          accountHolderName: prev.paymentInfo?.accountHolderName || ""
+                        }
+                      }));
+                    }}
+                    placeholder="Contoh: 1234567890"
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Nama Penerima
+                  </label>
+                  <input
+                    type="text"
+                    name="accountHolderName"
+                    value={newDetailedEvent.paymentInfo?.accountHolderName || ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setNewDetailedEvent(prev => ({
+                        ...prev,
+                        paymentInfo: {
+                          bankName: prev.paymentInfo?.bankName || "",
+                          accountNumber: prev.paymentInfo?.accountNumber || "",
+                          accountHolderName: value
+                        }
+                      }));
+                    }}
+                    placeholder="Contoh: John Doe"
                     className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
@@ -1793,438 +1912,25 @@ const EventsAdmin = ({ onUpdateEvents }: EventsAdminProps) => {
             </div>
           </div>
           
-          {/* Specific Detailed Event Form sections only for editing */}
-          {editingId && (
-            <div className="md:col-span-2 mt-6 border-t pt-6">
-              <h4 className="text-lg font-medium mb-4 text-gray-700 dark:text-gray-300">Informasi Detail Event</h4>
-              
-              {/* Organizer */}
-              <div className="mb-6">
-                <h5 className="text-md font-medium mb-3 text-gray-700 dark:text-gray-300">Informasi Penyelenggara</h5>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Penyelenggara
-                    </label>
-                    <input
-                      type="text"
-                      name="organizer"
-                      value={detailedEvents[editingId]?.organizer || ""}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setDetailedEvents(prev => ({
-                          ...prev,
-                          [editingId]: {
-                            ...prev[editingId] || {
-                              ...events.find(event => event.id === editingId)!,
-                              organizer: "",
-                              speakers: [],
-                              agenda: [],
-                              prerequisites: [],
-                              maxParticipants: 0,
-                              currentParticipants: 0,
-                              registrationDeadline: "",
-                              price: "Gratis",
-                              benefits: [],
-                              contactPerson: {
-                                name: "",
-                                phone: "",
-                                email: "",
-                                whatsapp: ""
-                              },
-                              faqs: [],
-                              images: []
-                            },
-                            organizer: value
-                          }
-                        }));
-                      }}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Deadline Pendaftaran
-                    </label>
-                    <input
-                      type="datetime-local"
-                      name="registrationDeadline"
-                      value={detailedEvents[editingId]?.registrationDeadline?.slice(0, 16) || ""}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setDetailedEvents(prev => ({
-                          ...prev,
-                          [editingId]: {
-                            ...prev[editingId] || {
-                              ...events.find(event => event.id === editingId)!,
-                              organizer: "",
-                              speakers: [],
-                              agenda: [],
-                              prerequisites: [],
-                              maxParticipants: 0,
-                              currentParticipants: 0,
-                              registrationDeadline: "",
-                              price: "Gratis",
-                              benefits: [],
-                              contactPerson: {
-                                name: "",
-                                phone: "",
-                                email: "",
-                                whatsapp: ""
-                              },
-                              faqs: [],
-                              images: []
-                            },
-                            registrationDeadline: value
-                          }
-                        }));
-                      }}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              {/* Participants and Price */}
-              <div className="mb-6">
-                <h5 className="text-md font-medium mb-3 text-gray-700 dark:text-gray-300">Peserta & Biaya</h5>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Jumlah Maksimal Peserta
-                    </label>
-                    <input
-                      type="number"
-                      name="maxParticipants"
-                      value={detailedEvents[editingId]?.maxParticipants || 0}
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value);
-                        setDetailedEvents(prev => ({
-                          ...prev,
-                          [editingId]: {
-                            ...prev[editingId] || {
-                              ...events.find(event => event.id === editingId)!,
-                              organizer: "",
-                              speakers: [],
-                              agenda: [],
-                              prerequisites: [],
-                              maxParticipants: 0,
-                              currentParticipants: 0,
-                              registrationDeadline: "",
-                              price: "Gratis",
-                              benefits: [],
-                              contactPerson: {
-                                name: "",
-                                phone: "",
-                                email: "",
-                                whatsapp: ""
-                              },
-                              faqs: [],
-                              images: []
-                            },
-                            maxParticipants: value
-                          }
-                        }));
-                      }}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Jumlah Peserta Saat Ini
-                    </label>
-                    <input
-                      type="number"
-                      name="currentParticipants"
-                      value={detailedEvents[editingId]?.currentParticipants || 0}
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value);
-                        setDetailedEvents(prev => ({
-                          ...prev,
-                          [editingId]: {
-                            ...prev[editingId] || {
-                              ...events.find(event => event.id === editingId)!,
-                              organizer: "",
-                              speakers: [],
-                              agenda: [],
-                              prerequisites: [],
-                              maxParticipants: 0,
-                              currentParticipants: 0,
-                              registrationDeadline: "",
-                              price: "Gratis",
-                              benefits: [],
-                              contactPerson: {
-                                name: "",
-                                phone: "",
-                                email: "",
-                                whatsapp: ""
-                              },
-                              faqs: [],
-                              images: []
-                            },
-                            currentParticipants: value
-                          }
-                        }));
-                      }}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Biaya
-                    </label>
-                    <input
-                      type="text"
-                      name="price"
-                      value={typeof detailedEvents[editingId]?.price === 'number' ? detailedEvents[editingId]?.price.toString() : detailedEvents[editingId]?.price || "Gratis"}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setDetailedEvents(prev => ({
-                          ...prev,
-                          [editingId]: {
-                            ...prev[editingId] || {
-                              ...events.find(event => event.id === editingId)!,
-                              organizer: "",
-                              speakers: [],
-                              agenda: [],
-                              prerequisites: [],
-                              maxParticipants: 0,
-                              currentParticipants: 0,
-                              registrationDeadline: "",
-                              price: "Gratis",
-                              benefits: [],
-                              contactPerson: {
-                                name: "",
-                                phone: "",
-                                email: "",
-                                whatsapp: ""
-                              },
-                              faqs: [],
-                              images: []
-                            },
-                            price: value === "Gratis" ? "Gratis" : parseInt(value) || 0
-                          }
-                        }));
-                      }}
-                      placeholder="Contoh: 50000 atau 'Gratis'"
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              {/* Contact Person */}
-              <div className="mb-6">
-                <h5 className="text-md font-medium mb-3 text-gray-700 dark:text-gray-300">Kontak Person</h5>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Nama
-                    </label>
-                    <input
-                      type="text"
-                      name="contactPersonName"
-                      value={detailedEvents[editingId]?.contactPerson?.name || ""}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setDetailedEvents(prev => ({
-                          ...prev,
-                          [editingId]: {
-                            ...prev[editingId] || {
-                              ...events.find(event => event.id === editingId)!,
-                              organizer: "",
-                              speakers: [],
-                              agenda: [],
-                              prerequisites: [],
-                              maxParticipants: 0,
-                              currentParticipants: 0,
-                              registrationDeadline: "",
-                              price: "Gratis",
-                              benefits: [],
-                              contactPerson: {
-                                name: "",
-                                phone: "",
-                                email: "",
-                                whatsapp: ""
-                              },
-                              faqs: [],
-                              images: []
-                            },
-                            contactPerson: {
-                              ...prev[editingId]?.contactPerson || {
-                                name: "",
-                                phone: "",
-                                email: "",
-                                whatsapp: ""
-                              },
-                              name: value
-                            }
-                          }
-                        }));
-                      }}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      name="contactPersonEmail"
-                      value={detailedEvents[editingId]?.contactPerson?.email || ""}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setDetailedEvents(prev => ({
-                          ...prev,
-                          [editingId]: {
-                            ...prev[editingId] || {
-                              ...events.find(event => event.id === editingId)!,
-                              organizer: "",
-                              speakers: [],
-                              agenda: [],
-                              prerequisites: [],
-                              maxParticipants: 0,
-                              currentParticipants: 0,
-                              registrationDeadline: "",
-                              price: "Gratis",
-                              benefits: [],
-                              contactPerson: {
-                                name: "",
-                                phone: "",
-                                email: "",
-                                whatsapp: ""
-                              },
-                              faqs: [],
-                              images: []
-                            },
-                            contactPerson: {
-                              ...prev[editingId]?.contactPerson || {
-                                name: "",
-                                phone: "",
-                                email: "",
-                                whatsapp: ""
-                              },
-                              email: value
-                            }
-                          }
-                        }));
-                      }}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Telepon
-                    </label>
-                    <input
-                      type="text"
-                      name="contactPersonPhone"
-                      value={detailedEvents[editingId]?.contactPerson?.phone || ""}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setDetailedEvents(prev => ({
-                          ...prev,
-                          [editingId]: {
-                            ...prev[editingId] || {
-                              ...events.find(event => event.id === editingId)!,
-                              organizer: "",
-                              speakers: [],
-                              agenda: [],
-                              prerequisites: [],
-                              maxParticipants: 0,
-                              currentParticipants: 0,
-                              registrationDeadline: "",
-                              price: "Gratis",
-                              benefits: [],
-                              contactPerson: {
-                                name: "",
-                                phone: "",
-                                email: "",
-                                whatsapp: ""
-                              },
-                              faqs: [],
-                              images: []
-                            },
-                            contactPerson: {
-                              ...prev[editingId]?.contactPerson || {
-                                name: "",
-                                phone: "",
-                                email: "",
-                                whatsapp: ""
-                              },
-                              phone: value
-                            }
-                          }
-                        }));
-                      }}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      WhatsApp
-                    </label>
-                    <input
-                      type="text"
-                      name="contactPersonWhatsapp"
-                      value={detailedEvents[editingId]?.contactPerson?.whatsapp || ""}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setDetailedEvents(prev => ({
-                          ...prev,
-                          [editingId]: {
-                            ...prev[editingId] || {
-                              ...events.find(event => event.id === editingId)!,
-                              organizer: "",
-                              speakers: [],
-                              agenda: [],
-                              prerequisites: [],
-                              maxParticipants: 0,
-                              currentParticipants: 0,
-                              registrationDeadline: "",
-                              price: "Gratis",
-                              benefits: [],
-                              contactPerson: {
-                                name: "",
-                                phone: "",
-                                email: "",
-                                whatsapp: ""
-                              },
-                              faqs: [],
-                              images: []
-                            },
-                            contactPerson: {
-                              ...prev[editingId]?.contactPerson || {
-                                name: "",
-                                phone: "",
-                                email: "",
-                                whatsapp: ""
-                              },
-                              whatsapp: value
-                            }
-                          }
-                        }));
-                      }}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          
           <div className="flex justify-end gap-2 md:col-span-2">
             <button
               onClick={handleCancel}
               className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              disabled={isSaving}
             >
               Batal
             </button>
             <button
               onClick={editingId ? handleUpdateEvent : handleAddEvent}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+              disabled={isSaving}
             >
+              {isSaving && (
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              )}
               {editingId ? "Update" : "Simpan"}
             </button>
           </div>
@@ -2286,14 +1992,22 @@ const EventsAdmin = ({ onUpdateEvents }: EventsAdminProps) => {
                     <button
                       onClick={() => handleEditEvent(event.id)}
                       className="text-blue-600 hover:text-blue-900 mr-3"
+                      disabled={isSaving}
                     >
                       Edit
                     </button>
 
                     <button
                       onClick={() => handleDeleteEvent(event.id)}
-                      className="text-red-600 hover:text-red-900"
+                      className="text-red-600 hover:text-red-900 inline-flex items-center"
+                      disabled={isSaving}
                     >
+                      {isSaving && (
+                        <svg className="animate-spin -ml-1 mr-1 h-3 w-3 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      )}
                       Hapus
                     </button>
                   </td>

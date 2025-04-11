@@ -27,6 +27,11 @@ const DetailedEventForm = ({ event, onSave, onCancel }: DetailedEventFormProps) 
       email: "",
       whatsapp: ""
     },
+    paymentInfo: {
+      bankName: "",
+      accountNumber: "",
+      accountHolderName: ""
+    },
     faqs: [],
     images: []
   });
@@ -79,6 +84,18 @@ const DetailedEventForm = ({ event, onSave, onCancel }: DetailedEventFormProps) 
       ...prev,
       contactPerson: {
         ...prev.contactPerson,
+        [name]: value
+      }
+    }));
+  };
+
+  const handlePaymentInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    
+    setDetailedEvent((prev: DetailedEventType) => ({
+      ...prev,
+      paymentInfo: {
+        ...prev.paymentInfo!,
         [name]: value
       }
     }));
@@ -334,6 +351,52 @@ const DetailedEventForm = ({ event, onSave, onCancel }: DetailedEventFormProps) 
               value={detailedEvent.contactPerson.whatsapp || ""}
               onChange={handleContactPersonChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        </div>
+      </div>
+      
+      {/* Payment Information */}
+      <div className="mb-6">
+        <h3 className="text-lg font-medium mb-3 text-gray-700 dark:text-gray-300">Informasi Pembayaran</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Nama Bank
+            </label>
+            <input
+              type="text"
+              name="bankName"
+              value={detailedEvent.paymentInfo?.bankName || ""}
+              onChange={handlePaymentInfoChange}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Contoh: BCA, Mandiri, BNI"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Nomor Rekening
+            </label>
+            <input
+              type="text"
+              name="accountNumber"
+              value={detailedEvent.paymentInfo?.accountNumber || ""}
+              onChange={handlePaymentInfoChange}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Contoh: 1234567890"
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Nama Penerima
+            </label>
+            <input
+              type="text"
+              name="accountHolderName"
+              value={detailedEvent.paymentInfo?.accountHolderName || ""}
+              onChange={handlePaymentInfoChange}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Contoh: John Doe"
             />
           </div>
         </div>
