@@ -1,21 +1,26 @@
 [
   {
     "nama": "Adimas Prakoso",
+    "nim": "17230448",
     "email": "adimas.prakoso2@gmail.com",
-    "nomor_telfon": "081291410009",
-    "foto_profile": "/anggota/adimas_prakoso.jpg",
-    "jabatan": "Ketua Divisi Litbang",
-    "asal_kampus": "UBSI Pemuda",
-    "NIM": "17230448",
-    "jenis_kelamin": "Laki-laki",
+    "jabatan": "KADIV LITBANG",
+    "divisi": "LITBANG",
     "semester": 4,
-    "password": "$2a$10$xJwz5DyVf7QN8x3vI3RKzeOpA1KIy3TjgGFueMK8JpnMo2ABIwKyS",
-    "nilai": {
-      "sikap": 90,
-      "cara_berbicara": 85,
-      "keaktifan": 88,
-      "kedisiplinan": 92,
-      "kepemimpinan": 87
-    }
+    "asal_kampus": "UBSI PEMUDA",
+    "jenis_kelamin": "Laki-laki",
+    "alamat": "GG. Pejuang 6 No. 60A, RT 003/RW 004, Kelapa Gading Timur, Kelapa Gading, Jakarta Utara, 14240",
+    "alasan_masuk": "Ingin tahu",
+    "surat_pendukung_organisasi": "",
+    "tanggal_masuk": "17 Oktober 2024",
+    "foto_diri": "/images/anggota/17230448.jpg",
+    "password": "$2b$10$Bx3dqY8l58lmM38.nM2aNu/zO52uknRDBI/o/Oy8ARU6KvI8wGdVO",
+    "no_telfon": "081291410009",
+    "penilaian": [
+      {
+        "skor": 18,
+        "kriteria": "Kesiapan dan Penampilan",
+        "deskripsi": "Penampilan sesuai edaran, sikap percaya diri, dan persiapan wawancara. Termasuk ketepatan waktu dan Kesigapan dalam merespon pertanyaan."
+      }
+    ]
   }
 ]
